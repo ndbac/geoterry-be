@@ -1,0 +1,2 @@
+logger:
+  formatter: json

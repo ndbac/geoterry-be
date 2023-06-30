@@ -1,0 +1,40 @@
+server:
+  port: APP_PORT
+  swaggerSchema: SWAGGER_SCHEMA
+  hostname: SERVER_HOSTNAME
+
+db:
+  mongodb:
+    uri: MONGODB_URI
+
+aws:
+  accessKeyId: AWS_ACCESS_KEY_ID
+  secretAccessKey: AWS_SECRET_KEY
+  s3:
+    bucket: AWS_S3_BUCKET
+
+sentry:
+  dsn: SENTRY_DSN
+  enabled:
+    __name: SENTRY_ENABLED
+    __format: json
+
+logger:
+  formatter: LOGGER_FORMATTER
+
+serviceAuthentication:
+  username: GEOTERRY_DOC_USERNAME
+  password: GEOTERRY_DOC_PASSWORD
+
+twilio:
+  sid: TWILIO_SID
+  authToken: TWILIO_AUTH_TOKEN
+  otpSmsSid: TWILIO_OTP_SMS_SID
+
+jsonwebtoken:
+  secretKey: JWT_SECRET_KEY
+  expiresIn:
+    __name: JWT_EXPIRES_IN_MILI_SECONDS
+    __format: json
+  subject: JWT_SUBJECT
+  audience: JWT_AUDIENCE

@@ -1,0 +1,66 @@
+name: Code quality
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    branches:
+      - develop
+      - release/**
+      - master
+  push:
+    branches:
+      - develop
+      - master
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  Code-Quality:
+    name: Code quality
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install dependency
+        run: yarn install --frozen-lockfile
+      - name: Check lint and format
+        run: |
+          yarn format:check
+          yarn lint:check
+      - name: Check commitlint
+        uses: wagoid/commitlint-github-action@v4
+        if: github.event_name == 'pull_request' && github.head_ref == 'refs/heads/develop'
+      - name: Check the structure of build directory
+        run: |
+          yarn run build
+          echo "Compilation OK!"
+          if test -f "./dist/main.js"; then
+            echo "Build configuration OK!"
+          else
+            echo "Wrong build configuration :(";
+            exit 1;
+          fi;
+  test:
+    name: Test
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependency
+        run: yarn install --frozen-lockfile
+      - uses: artiomtr/jest-coverage-report-action@v2.0-rc.6
+        with:
+          package-manager: yarn
+          threshold: 1
+          skip-step: install
+          annotations: none
+          test-script: yarn run test:github:ci

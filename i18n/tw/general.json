@@ -1,0 +1,18 @@
+{
+    "GEOTERRY_ERROR_0000": "發生未知錯誤",
+    "GEOTERRY_ERROR_0001": "存取令牌無效",
+    "GEOTERRY_ERROR_0002": "找不到店家",
+    "GEOTERRY_ERROR_0003": "無法存取店家",
+    "GEOTERRY_ERROR_0004": "OTP碼錯誤",
+    "GEOTERRY_ERROR_0005": "此識別碼已註冊",
+    "GEOTERRY_ERROR_0006": "手機號碼或密碼無效",
+    "GEOTERRY_ERROR_0007": "上傳檔案失敗",
+    "GEOTERRY_ERROR_0008": "圖片大小不被接受",
+    "GEOTERRY_ERROR_0009": "無法生成QR碼",
+    "GEOTERRY_ERROR_0010": "刷新令牌失敗",
+    "GEOTERRY_ERROR_0011": "名稱重複",
+    "GEOTERRY_ERROR_0012": "Slug重複",
+    "GEOTERRY_ERROR_0013": "Store already existed",
+    "GEOTERRY_ERROR_0014": "Order session is already created",
+    "GEOTERRY_ERROR_0015": "Input product ids are invalid"
+}

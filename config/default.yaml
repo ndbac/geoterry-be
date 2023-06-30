@@ -1,0 +1,69 @@
+service:
+  name: Geoterry Backend Service
+  description: Geoterry backend service to manage Geoterry system
+  baseUrl: /api/geoterry
+  apiVersion: 0.1.0
+  docsBaseUrl: /docs/geoterry
+
+server:
+  port: 3000
+  swaggerSchema: http
+  hostname: localhost:3000
+  cors:
+    allowedHeaders: 'authorization,content-type'
+    exposedHeaders: 'authorization,x-geoterry-pagination-page,x-geoterry-pagination-page-size,x-geoterry-pagination-total'
+
+db:
+  mongodb:
+    uri: mongodb://localhost:27017/geoterry-backend
+
+aws:
+  accessKeyId: sample-aws-access-key-id
+  secretAccessKey: sample-aws-secret-key
+  region: ap-southeast-1
+  s3:
+    signatureVersion: v4
+    bucket: sample-aws-bucket
+    photoPrefixKey: geoterry/photo
+
+logger:
+  formatter: local-custom
+
+sentry:
+  dsn: sentry-dsn
+  enabled: false
+
+serviceAuthentication:
+  username: admin
+  password: admin
+
+twilio:
+  sid: AC-sample-twilio-sid
+  authToken: sample-twilio-auth-token
+  otpSmsSid: sample-twilio-otp-sms-sid
+
+bcrypt:
+  saltRoundQuantity: 14
+
+jsonwebtoken:
+  secretKey: sample-jsonwebtoken-secret-key
+  expiresIn:  2592000000 # 30 days
+  subject: geoterry-application
+  audience: geoterry-user
+
+imageUpload:
+  size:
+    max: 26214400
+    maxConvertToString: 25MB
+  acceptedTypes:
+    - image
+
+product:
+  defaultCategory:
+    tw: 其余
+    vn: Khác
+    en: Others
+    slug: others
+
+geoterryBuyerWeb:
+  baseStoreUrl: https://github.com/Metaverest
