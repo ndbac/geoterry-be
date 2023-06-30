@@ -1,25 +1,25 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { IamNamespace, IRequestWithUserCtx } from 'src/shared/types';
-import { StoreRepository } from 'src/modules/store/store.repository';
+import { ProfileRepository } from 'src/modules/profile/profile.repository';
 import { ErrorCode } from 'src/errors/error-defs';
 import { throwStandardError } from 'src/errors/helpers';
 
 @Injectable()
-export class StoreAccessGuard implements CanActivate {
-  constructor(private readonly storeRepo: StoreRepository) {}
+export class ProfileAccessGuard implements CanActivate {
+  constructor(private readonly profileRepo: ProfileRepository) {}
   async canActivate(ctx: ExecutionContext) {
     const req = ctx.switchToHttp().getRequest<IRequestWithUserCtx>();
     if (req.user.namespace === IamNamespace.GEOTERRY_ADMINS) {
-      const store = await this.storeRepo.findById(req.params.storeId);
-      if (!store) {
-        return throwStandardError(ErrorCode.STORE_NOT_FOUND);
+      const profile = await this.profileRepo.findById(req.params.profileId);
+      if (!profile) {
+        return throwStandardError(ErrorCode.PROFILE_NOT_FOUND);
       }
     } else {
       const userId = req.user.userId;
-      const storeId = req.params.storeId;
-      const userStore = await this.storeRepo.findOne({ userId });
-      if (!userStore || String(userStore._id) !== storeId) {
-        return throwStandardError(ErrorCode.FORBIDDEN_STORE_ACCESS);
+      const profileId = req.params.profileId;
+      const userProfile = await this.profileRepo.findOne({ userId });
+      if (!userProfile || String(userProfile._id) !== profileId) {
+        return throwStandardError(ErrorCode.FORBIDDEN_PROFILE_ACCESS);
       }
     }
     return true;

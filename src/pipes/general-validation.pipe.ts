@@ -56,5 +56,5 @@ export const getCustomParamValidationPipe = (
 };
 
 export const EXCLUDE_REQ_CTX_VALIDATION_PIPE = getCustomParamValidationPipe({
-  excludedTransformKeys: ['store', 'user', 'url'],
+  excludedTransformKeys: ['profile', 'user', 'url'],
 });

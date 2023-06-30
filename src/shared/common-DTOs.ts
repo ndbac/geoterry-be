@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { Allow } from 'class-validator';
 import { IIamUserData } from 'src/guards/types';
-import { IStore } from 'src/modules/store/store.types';
+import { IProfile } from 'src/modules/profile/profile.types';
 
 export class BaseDbResponseDto {
   @ApiProperty()
@@ -22,7 +22,7 @@ export class BaseDbResponseDto {
 
 export class RequestContextDto {
   @Allow()
-  store: IStore;
+  profile: IProfile;
 
   @Allow()
   user: IIamUserData;

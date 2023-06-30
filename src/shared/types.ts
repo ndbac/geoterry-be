@@ -9,7 +9,7 @@ import { Request } from 'express';
 
 export enum CollectionName {
   ACCOUNTS = 'accounts',
-  STORES = 'stores',
+  PROFILES = 'profiles',
 }
 
 export type PossiblyAsync<T> = T | Promise<T>;
@@ -78,12 +78,6 @@ export enum EIdentifierType {
 
 export interface IRequestWithUserCtx extends Request {
   user: IIamUserData;
-}
-
-export enum Currency {
-  VND = 'VND',
-  USD = 'USD',
-  NTD = 'NTD',
 }
 
 export enum GeneralActionStatus {

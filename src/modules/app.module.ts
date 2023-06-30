@@ -2,9 +2,14 @@ import { Module } from '@nestjs/common';
 import { AccountModule } from './account/accounts.module';
 import { DBRootModule } from './adapters/db/db-root.module';
 import { HealthModule } from './health/health.module';
-import { StoreModule } from './store/store.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
-  imports: [DBRootModule.forMongo(), HealthModule, AccountModule, StoreModule],
+  imports: [
+    DBRootModule.forMongo(),
+    HealthModule,
+    AccountModule,
+    ProfileModule,
+  ],
 })
 export class AppModule {}

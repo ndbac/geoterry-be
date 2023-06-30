@@ -57,13 +57,3 @@ imageUpload:
     maxConvertToString: 25MB
   acceptedTypes:
     - image
-
-product:
-  defaultCategory:
-    tw: 其余
-    vn: Khác
-    en: Others
-    slug: others
-
-geoterryBuyerWeb:
-  baseStoreUrl: https://github.com/Metaverest

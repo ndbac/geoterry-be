@@ -1,21 +1,23 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
+  IsNotEmpty,
   IsOptional,
   IsString,
-  Matches,
-  MaxLength,
-  MinLength,
+  ValidateNested,
 } from 'class-validator';
 import { IsValidPhoneNumber } from 'src/decorators/is-valid-phone-number.decorator';
-import { Currency, LanguageCode } from 'src/shared/types';
+import { RequestContextDto } from 'src/shared/common-DTOs';
+import { LanguageCode } from 'src/shared/types';
+import { ICreateProfileData } from '../profile.types';
 
-export class UpdateStoreReqDto {
-  @ApiPropertyOptional({ type: String })
-  @IsOptional()
+export class CreateProfileReqDto {
+  @ApiProperty({ type: String })
+  @IsNotEmpty()
   @IsString()
-  businessName?: string;
+  displayName: string;
 
   @ApiPropertyOptional({ type: String })
   @IsOptional()
@@ -30,30 +32,21 @@ export class UpdateStoreReqDto {
   @ApiPropertyOptional({ type: String })
   @IsOptional()
   @IsString()
-  address?: string;
-
-  @ApiPropertyOptional({ type: String, enum: Currency })
-  @IsOptional()
-  @IsEnum(Currency)
-  currency?: Currency;
+  bio?: string;
 
   @ApiPropertyOptional({ type: String })
   @IsOptional()
   @IsString()
   logoUrl?: string;
 
-  @ApiPropertyOptional({ type: String })
-  @IsOptional()
-  @IsString()
-  @Matches(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/, {
-    message: 'Slug should be not contained any special characters',
-  })
-  @MinLength(6)
-  @MaxLength(32)
-  slug?: string;
-
   @ApiPropertyOptional({ type: String, enum: LanguageCode })
   @IsOptional()
   @IsEnum(LanguageCode)
   languageCode?: LanguageCode;
+}
+
+export class UserCreateProfileInputWithUserContextDto extends RequestContextDto {
+  @Type(() => CreateProfileReqDto)
+  @ValidateNested()
+  data: ICreateProfileData;
 }

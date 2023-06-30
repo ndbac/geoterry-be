@@ -5,22 +5,22 @@ import { ErrorCode } from 'src/errors/error-defs';
 import { throwStandardError } from 'src/errors/helpers';
 import { BaseRepository } from 'src/shared/mongoose/base.repository';
 import { CollectionName } from 'src/shared/types';
-import { StoreDocument } from './store.model';
+import { ProfileDocument } from './profile.model';
 
 @Injectable()
-export class StoreRepository
-  extends BaseRepository<StoreDocument>
+export class ProfileRepository
+  extends BaseRepository<ProfileDocument>
   implements OnApplicationBootstrap
 {
   constructor(
-    @InjectModel(CollectionName.STORES)
-    model: Model<StoreDocument>,
+    @InjectModel(CollectionName.PROFILES)
+    model: Model<ProfileDocument>,
   ) {
     super(model);
   }
 
   throwErrorNotFound() {
-    return throwStandardError(ErrorCode.STORE_NOT_FOUND);
+    return throwStandardError(ErrorCode.PROFILE_NOT_FOUND);
   }
 
   async onApplicationBootstrap() {
