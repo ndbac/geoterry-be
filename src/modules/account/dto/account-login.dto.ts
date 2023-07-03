@@ -30,4 +30,21 @@ export class AccountRefreshToken {
   @IsNotEmpty()
   @IsString()
   token: string;
+
+  @ApiProperty({ type: String })
+  @IsNotEmpty()
+  @IsString()
+  refreshToken: string;
+}
+
+export class AccountUpdateCredentialsDto {
+  @ApiProperty({ type: String })
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+
+  @ApiProperty({ type: String })
+  @IsNotEmpty()
+  @IsString()
+  oldPassword: string;
 }

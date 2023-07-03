@@ -4,9 +4,10 @@ import {
   Post,
   Put,
   UseFilters,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { EndpointConfig } from 'src/decorators/endpoint-config.decorator';
 import { I18nExceptionFilter } from 'src/filters/i18n-exception.filter';
 import {
@@ -19,8 +20,11 @@ import { MaskCredentialsInAccountInterceptor } from 'src/interceptors/mask-cred-
 import {
   AccountLoginInputDto,
   AccountRefreshToken,
+  AccountUpdateCredentialsDto,
 } from '../dto/account-login.dto';
 import { RecoverAccountDto } from '../dto/account-recover.dto';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { User } from 'src/decorators/user.decorator';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -55,6 +59,19 @@ export class AccountController {
   @Post('/login')
   async loginAccount(@Body() data: AccountLoginInputDto) {
     return this.accountService.login(data);
+  }
+
+  @EndpointConfig(
+    ACCOUNT_ENDPOINT_CONFIG[EAccountOperation.ACCOUNT_UPDATE_CREDENTIALS],
+  )
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @Put('/update-credentials')
+  async updateCredentials(
+    @Body() data: AccountUpdateCredentialsDto,
+    @User('userId') userId: string,
+  ) {
+    return this.accountService.updateCredentials(userId, data);
   }
 
   @EndpointConfig(ACCOUNT_ENDPOINT_CONFIG[EAccountOperation.REFRESH_TOKEN])

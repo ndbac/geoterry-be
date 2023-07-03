@@ -4,6 +4,12 @@ import { EIdentifierType, IamNamespace } from 'src/shared/types';
 export class AccountCredentialsResDto {
   @ApiProperty({ type: Date })
   passwordChangedAt: Date;
+
+  @ApiProperty({ type: String })
+  token: string;
+
+  @ApiProperty({ type: String })
+  refreshToken: string;
 }
 
 export class AccountResponseDto {
@@ -21,17 +27,4 @@ export class AccountResponseDto {
 
   @ApiProperty()
   credentials: AccountCredentialsResDto;
-}
-
-export class AccountTokenDataDto {
-  @ApiProperty({ type: Date })
-  expiresIn: Date;
-
-  @ApiProperty({ type: String })
-  accessToken: string;
-}
-
-export class AccountLoginResDto extends AccountResponseDto {
-  @ApiProperty({ type: AccountTokenDataDto })
-  token: AccountTokenDataDto;
 }

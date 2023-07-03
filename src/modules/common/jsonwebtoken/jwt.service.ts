@@ -32,4 +32,16 @@ export class JwtService {
         });
     }
   }
+
+  decodeToken(token: string, options?: { ignoreError?: boolean }) {
+    try {
+      return jwt.decode(token);
+    } catch (error) {
+      if (!options?.ignoreError)
+        throw new BadRequestException({
+          message: 'Invalid token',
+          sentryAlertDisabled: true,
+        });
+    }
+  }
 }

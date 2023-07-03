@@ -3,12 +3,10 @@ import { IEndpointConfiguration } from 'src/shared/types';
 import {
   AccountLoginInputDto,
   AccountRefreshToken,
+  AccountUpdateCredentialsDto,
 } from '../dto/account-login.dto';
 import { RecoverAccountDto } from '../dto/account-recover.dto';
-import {
-  AccountLoginResDto,
-  AccountResponseDto,
-} from '../dto/account.response.dto';
+import { AccountResponseDto } from '../dto/account.response.dto';
 import {
   CreateAccountDto,
   SendVerificationDto,
@@ -20,6 +18,7 @@ export enum EAccountOperation {
   ACCOUNT_LOGIN = 'accountLogin',
   REFRESH_TOKEN = 'refreshToken',
   ACCOUNT_RECOVER = 'accountRecover',
+  ACCOUNT_UPDATE_CREDENTIALS = 'accountUpdateCredentials',
 }
 
 export const ACCOUNT_ENDPOINT_CONFIG: Record<
@@ -59,7 +58,7 @@ export const ACCOUNT_ENDPOINT_CONFIG: Record<
     },
     responses: [
       {
-        type: AccountLoginResDto,
+        type: AccountResponseDto,
         status: HttpStatus.ACCEPTED,
       },
     ],
@@ -72,7 +71,7 @@ export const ACCOUNT_ENDPOINT_CONFIG: Record<
     },
     responses: [
       {
-        type: AccountLoginResDto,
+        type: AccountResponseDto,
         status: HttpStatus.ACCEPTED,
       },
     ],
@@ -82,6 +81,19 @@ export const ACCOUNT_ENDPOINT_CONFIG: Record<
     summary: 'Recover account',
     body: {
       type: RecoverAccountDto,
+    },
+    responses: [
+      {
+        type: AccountResponseDto,
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [EAccountOperation.ACCOUNT_UPDATE_CREDENTIALS]: {
+    operationId: EAccountOperation.ACCOUNT_UPDATE_CREDENTIALS,
+    summary: 'Update account credentials',
+    body: {
+      type: AccountUpdateCredentialsDto,
     },
     responses: [
       {

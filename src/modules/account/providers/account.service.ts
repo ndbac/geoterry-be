@@ -18,13 +18,16 @@ import { JwtService } from 'src/modules/common/jsonwebtoken/jwt.service';
 import {
   AccountLoginInputDto,
   AccountRefreshToken,
+  AccountUpdateCredentialsDto,
 } from '../dto/account-login.dto';
-import config from 'config';
 import { convertObject } from 'src/shared/mongoose/helpers';
 import { JwtPayload } from 'jsonwebtoken';
 import { isAfter } from 'date-fns';
 import { ErrorCode } from 'src/errors/error-defs';
 import { RecoverAccountDto } from '../dto/account-recover.dto';
+import { AccountDocument } from '../accounts.model';
+import { generateRandomString } from 'src/shared/helpers';
+import { REFRESH_TOKEN_LENGTH } from '../constants';
 
 @Injectable()
 export class AccountService {
@@ -65,44 +68,81 @@ export class AccountService {
     await this.isEligibleForCreateAccount(input);
 
     const hashedPassword = await this.bcryptService.hash(input.password);
+    const refreshToken = generateRandomString(REFRESH_TOKEN_LENGTH);
     const accountData = {
       credentials: {
         passwordChangedAt: new Date(),
         password: hashedPassword,
+        refreshToken,
       },
       namespace: input.namespace,
       identifier: input.identifier,
       identifierType: input.identifierType,
     };
-    return this.accountRepo.create(accountData);
+    const acc = await this.accountRepo.create(accountData);
+    const tokenData = {
+      id: acc.id,
+      identifier: acc.identifier,
+      identifierType: acc.identifierType,
+    };
+    const accessToken = this.jwtService.signToken(tokenData);
+    const convertedAcc = convertObject(acc);
+    return {
+      ...convertedAcc,
+      credentials: {
+        ...convertedAcc.credentials,
+        token: accessToken,
+      },
+    };
   }
 
   async recoverAccount(input: RecoverAccountDto) {
     // check eligible for creating account
-    await this.isEligibleForRecoveringAccount(input);
+    const account = await this.isEligibleForRecoveringAccount(input);
 
     const hashedPassword = await this.bcryptService.hash(input.password);
+    const refreshToken = generateRandomString(REFRESH_TOKEN_LENGTH);
     const updateData = {
       credentials: {
         passwordChangedAt: new Date(),
         password: hashedPassword,
+        refreshToken,
       },
     };
-    return this.accountRepo.updateOne(
-      {
-        namespace: input.namespace,
-        identifier: input.identifier,
-        identifierType: input.identifierType,
-      },
+    const updatedAcc = (await this.accountRepo.updateById(
+      account.id,
       updateData,
-    );
+    )) as AccountDocument;
+    const tokenData = {
+      id: updatedAcc.id,
+      identifier: updatedAcc.identifier,
+      identifierType: updatedAcc.identifierType,
+    };
+    const accessToken = this.jwtService.signToken(tokenData);
+    const convertedAcc = convertObject(updatedAcc);
+    return {
+      ...convertedAcc,
+      credentials: {
+        ...convertedAcc.credentials,
+        token: accessToken,
+      },
+    };
   }
 
   async login(input: AccountLoginInputDto) {
-    const account = await this.accountRepo.findOneOrFail({
-      identifier: input.identifier,
-      identifierType: input.identifierType,
-    });
+    const refreshToken = generateRandomString(REFRESH_TOKEN_LENGTH);
+    const account = await this.accountRepo.updateOne(
+      {
+        identifier: input.identifier,
+        identifierType: input.identifierType,
+      },
+      {
+        $set: { 'credentials.refreshToken': refreshToken },
+      },
+    );
+    if (!account) {
+      this.accountRepo.throwErrorNotFound();
+    }
     if (
       await this.bcryptService.compare(
         input.password,
@@ -115,13 +155,13 @@ export class AccountService {
         identifierType: account.identifierType,
       };
       const accessToken = this.jwtService.signToken(tokenData);
+      const convertedAcc = convertObject(account);
       return {
-        ...convertObject(account),
-        token: {
-          accessToken,
-          expiresIn: new Date(
-            Date.now() + config.get<string>('jsonwebtoken.expiresIn'),
-          ),
+        ...convertedAcc,
+        credentials: {
+          ...convertedAcc.credentials,
+          token: accessToken,
+          refreshToken,
         },
       };
     }
@@ -129,14 +169,15 @@ export class AccountService {
   }
 
   async refreshToken(input: AccountRefreshToken) {
-    const tokenData = this.jwtService.verifyToken(input.token) as JwtPayload;
+    const tokenData = this.jwtService.decodeToken(input.token) as JwtPayload;
     if (tokenData?.data) {
       const account = await this.accountRepo.findByIdOrFail(tokenData.data?.id);
       if (
         isAfter(
           (tokenData.iat || 0) * 1000,
           account.credentials.passwordChangedAt,
-        )
+        ) &&
+        input.refreshToken === account.credentials.refreshToken
       ) {
         const newTokenData = {
           id: account.id,
@@ -144,18 +185,58 @@ export class AccountService {
           identifierType: account.identifierType,
         };
         const accessToken = this.jwtService.signToken(newTokenData);
+        const refreshToken = generateRandomString(REFRESH_TOKEN_LENGTH);
+        await this.accountRepo.updateById(account.id, {
+          $set: { 'credentials.refreshToken': refreshToken },
+        });
         return {
-          ...convertObject(account),
-          token: {
-            accessToken,
-            expiresIn: new Date(
-              Date.now() + config.get<string>('jsonwebtoken.expiresIn'),
-            ),
-          },
+          refreshToken,
+          token: accessToken,
         };
       }
     }
     return throwStandardError(ErrorCode.FAILED_TO_REFRESH_TOKEN);
+  }
+
+  async updateCredentials(
+    accountId: string,
+    input: AccountUpdateCredentialsDto,
+  ) {
+    const account = await this.accountRepo.findByIdOrFail(accountId);
+    const isValid = await this.bcryptService.compare(
+      input.oldPassword,
+      account.credentials.password,
+    );
+    if (isValid) {
+      const hashedPassword = await this.bcryptService.hash(input.password);
+      const refreshToken = generateRandomString(REFRESH_TOKEN_LENGTH);
+      const updateData = {
+        credentials: {
+          passwordChangedAt: new Date(),
+          password: hashedPassword,
+          refreshToken,
+        },
+      };
+      const updatedAcc = (await this.accountRepo.updateById(
+        accountId,
+        updateData,
+      )) as AccountDocument;
+      const newTokenData = {
+        id: updatedAcc.id,
+        identifier: updatedAcc.identifier,
+        identifierType: updatedAcc.identifierType,
+      };
+      const accessToken = this.jwtService.signToken(newTokenData);
+      const convertedAcc = convertObject(updatedAcc);
+      return {
+        ...convertedAcc,
+        credentials: {
+          ...convertedAcc.credentials,
+          token: accessToken,
+        },
+      };
+    }
+    return throwStandardError(ErrorCode.INCORRECT_PASSWORD);
   }
 
   private async isEligibleForCreateAccount(input: CreateAccountDto) {
@@ -200,7 +281,7 @@ export class AccountService {
 
   private async isEligibleForRecoveringAccount(input: RecoverAccountDto) {
     // check duplicate account
-    await this.accountRepo.findOneOrFail({
+    const acc = await this.accountRepo.findOneOrFail({
       namespace: input.namespace,
       identifier: input.identifier,
       identifierType: input.identifierType,
@@ -223,5 +304,7 @@ export class AccountService {
           sentryAlertDisabled: true,
         });
     }
+
+    return acc;
   }
 }
