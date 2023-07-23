@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BaseDbResponseDto } from 'src/shared/common-DTOs';
 import { EIdentifierType, IamNamespace } from 'src/shared/types';
 
 export class AccountCredentialsResDto {
@@ -12,7 +13,7 @@ export class AccountCredentialsResDto {
   refreshToken: string;
 }
 
-export class AccountResponseDto {
+export class AccountResponseDto extends BaseDbResponseDto {
   @ApiProperty({ type: String, enum: IamNamespace })
   namespace: IamNamespace;
 

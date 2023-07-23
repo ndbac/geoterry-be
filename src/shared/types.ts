@@ -10,6 +10,7 @@ import { Request } from 'express';
 export enum CollectionName {
   ACCOUNTS = 'accounts',
   PROFILES = 'profiles',
+  TERRIES = 'terries',
 }
 
 export type PossiblyAsync<T> = T | Promise<T>;

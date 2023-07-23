@@ -30,3 +30,10 @@ export enum MongoType {
   OBJECT = 3,
   INTEGER_32 = 16,
 }
+
+export enum MongoLocationType {
+  POINT = 'Point',
+  LINE_STRING = 'LineString',
+  POLYGON = 'Polygon',
+  MULTI_POINT = 'MultiPoint',
+}

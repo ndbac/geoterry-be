@@ -47,7 +47,7 @@ bcrypt:
 
 jsonwebtoken:
   secretKey: sample-jsonwebtoken-secret-key
-  expiresIn:  900000 # 15 mins
+  expiresIn:  900 # 15 mins
   subject: geoterry-application
   audience: geoterry-user
 

@@ -59,6 +59,9 @@ export class AccountService {
           });
       }
     } else {
+      if (input.isRecoverPassword) {
+        return throwStandardError(ErrorCode.PROFILE_NOT_FOUND);
+      }
       return throwStandardError(ErrorCode.ALREADY_ONBOARD_IDENTIFIER);
     }
   }

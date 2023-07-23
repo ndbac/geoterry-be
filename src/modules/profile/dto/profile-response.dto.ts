@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { BaseDbResponseDto } from 'src/shared/common-DTOs';
 import { LanguageCode } from 'src/shared/types';
 
-export class ProfileResDto {
+export class ProfileResDto extends BaseDbResponseDto {
   @ApiProperty({ type: String })
   displayName: string;
 
