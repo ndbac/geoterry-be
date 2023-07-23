@@ -16,7 +16,7 @@ import {
 } from '../dto/create-account.dto';
 import { ACCOUNT_ENDPOINT_CONFIG, EAccountOperation } from './endpoint-config';
 import { AccountService } from '../providers/account.service';
-import { MaskCredentialsInAccountInterceptor } from 'src/interceptors/mask-cred-in-account';
+import { MaskCredentialsInAccountInterceptor } from 'src/interceptors/mask-cred-in-account.interceptor';
 import {
   AccountLoginInputDto,
   AccountRefreshToken,

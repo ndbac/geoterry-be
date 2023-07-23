@@ -3,14 +3,16 @@ import { TerryRepository } from '../terry.repository';
 import { TerryInputDto } from '../dto/terry.dto';
 import { TerryFilterInputDto } from '../dto/terry-filter.dto';
 import { MongoLocationType } from 'src/shared/mongoose/types';
-import {
-  TERRY_FILTER_MAX_DISTANCE_IN_METER_DEFAULT,
-  TERRY_FILTER_MIN_DISTANCE_IN_METER_DEFAULT,
-} from '../constants';
+import { IPagination } from 'src/shared/types';
+import { TerrySearchHelper } from './terry-search.helper';
+import { getPaginationHeaders } from 'src/shared/pagination.helpers';
 
 @Injectable()
 export class TerryService {
-  constructor(private readonly terryRepo: TerryRepository) {}
+  constructor(
+    private readonly terryRepo: TerryRepository,
+    private readonly terrySearchHelper: TerrySearchHelper,
+  ) {}
 
   async createTerry(data: TerryInputDto, profileId: string) {
     const terry = await this.terryRepo.create({
@@ -24,32 +26,35 @@ export class TerryService {
     return terry;
   }
 
-  async filterTerries(data: TerryFilterInputDto, profileId: string) {
-    const terry = await this.terryRepo.aggregate([
-      {
-        $geoNear: {
-          near: {
-            type: 'Point',
-            coordinates: [data.location.longitude, data.location.latitude],
-          },
-          minDistance:
-            data.distance?.min || TERRY_FILTER_MIN_DISTANCE_IN_METER_DEFAULT,
-          maxDistance:
-            data.distance?.max || TERRY_FILTER_MAX_DISTANCE_IN_METER_DEFAULT,
-          spherical: true,
-          query: { profileId },
-          distanceField: 'distance',
+  async filterTerries(
+    data: TerryFilterInputDto,
+    profileId: string,
+    pagination: IPagination,
+  ) {
+    const { queryWithoutPagination, queryWithPagination } =
+      this.terrySearchHelper.convertTerryFilterDtoToMongoAggregation(
+        {
+          ...data,
+          profileId,
         },
-      },
-      {
-        $addFields: {
-          id: '$_id',
-        },
-      },
-      {
-        $unset: ['_id', '__v'],
-      },
+        pagination,
+      );
+    const terries = await this.terryRepo.aggregate([
+      ...queryWithPagination,
+      ...this.terrySearchHelper.normalizedMongoDbRecords(),
     ]);
-    return terry;
+    const total =
+      (
+        await this.terryRepo.aggregate([
+          ...queryWithoutPagination,
+          {
+            $count: 'total',
+          },
+        ])
+      )[0]?.total || 0;
+    return {
+      items: terries,
+      headers: getPaginationHeaders(pagination, total),
+    };
   }
 }

@@ -1,9 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsString,
   ValidateNested,
 } from 'class-validator';
 
@@ -30,11 +30,16 @@ export class DistanceQueryDto {
 }
 
 export class TerryFilterInputDto {
+  @ApiProperty({ type: String })
+  @IsString()
+  @IsOptional()
+  textSearch?: string;
+
   @ApiProperty({ type: LocationDto })
   @ValidateNested()
   @Type(() => LocationDto)
-  @IsNotEmpty()
-  location: LocationDto;
+  @IsOptional()
+  location?: LocationDto;
 
   @ApiProperty({ type: DistanceQueryDto })
   @ValidateNested()

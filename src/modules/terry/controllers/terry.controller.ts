@@ -5,18 +5,25 @@ import {
   Post,
   UseFilters,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthEndpoint } from 'src/decorators/auth-endpoint.decorator';
 import { EndpointConfig } from 'src/decorators/endpoint-config.decorator';
 import { I18nExceptionFilter } from 'src/filters/i18n-exception.filter';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { IamNamespace } from 'src/shared/types';
+import { IPagination, IamNamespace } from 'src/shared/types';
 import { TerryService } from '../providers/terry.service';
 import { ProfileAccessGuard } from 'src/guards/store-access.guard';
 import { ETerryOperation, TERRY_ENDPOINT_CONFIG } from './endpoint-config';
 import { TerryInputDto } from '../dto/terry.dto';
 import { TerryFilterInputDto } from '../dto/terry-filter.dto';
+import { NormalizedGeoJsonPointInterceptor } from 'src/interceptors/terry/normalized-geo-json-point.interceptor';
+import { PaginationInterceptor } from 'src/interceptors/pagination.interceptor';
+import {
+  Pagination,
+  PaginationSwaggerQuery,
+} from 'src/decorators/pagination.decorator';
 
 @Controller('profile/:profileId/terry')
 @ApiTags('builder.terry')
@@ -39,11 +46,14 @@ export class TerryController {
   @AuthEndpoint({
     namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
   })
+  @UseInterceptors(NormalizedGeoJsonPointInterceptor, PaginationInterceptor)
+  @PaginationSwaggerQuery()
   @Post('filter')
   filter(
     @Body() data: TerryFilterInputDto,
     @Param('profileId') profileId: string,
+    @Pagination() pagination: IPagination,
   ) {
-    return this.terryService.filterTerries(data, profileId);
+    return this.terryService.filterTerries(data, profileId, pagination);
   }
 }

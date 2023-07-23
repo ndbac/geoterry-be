@@ -22,7 +22,7 @@ import {
 } from '../dto/account-login.dto';
 import { convertObject } from 'src/shared/mongoose/helpers';
 import { JwtPayload } from 'jsonwebtoken';
-import { isAfter } from 'date-fns';
+import { isAfter, sub } from 'date-fns';
 import { ErrorCode } from 'src/errors/error-defs';
 import { RecoverAccountDto } from '../dto/account-recover.dto';
 import { AccountDocument } from '../accounts.model';
@@ -74,7 +74,7 @@ export class AccountService {
     const refreshToken = generateRandomString(REFRESH_TOKEN_LENGTH);
     const accountData = {
       credentials: {
-        passwordChangedAt: new Date(),
+        passwordChangedAt: sub(new Date(), { minutes: 5 }), // to make sure that the password is changed before the account is created
         password: hashedPassword,
         refreshToken,
       },

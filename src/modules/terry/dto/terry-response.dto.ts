@@ -1,17 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
-import { MongoLocationType } from 'src/shared/mongoose/types';
 
 export class TerryLocationResDto {
-  @ApiProperty({ type: String, enum: MongoLocationType })
-  type: MongoLocationType;
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @IsNotEmpty()
+  latitude: number;
 
-  @ApiProperty({
-    type: [Number],
-    example: [105.8397664, 21.0186282],
-    description: 'longitude first, latitude second',
-  })
-  coordinates: number[];
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @IsNotEmpty()
+  longitude: number;
 }
 
 export class TerryResponseDto extends BaseDbResponseDto {
@@ -32,4 +32,7 @@ export class TerryResponseDto extends BaseDbResponseDto {
 
   @ApiProperty({ type: TerryLocationResDto })
   location: TerryLocationResDto;
+
+  @ApiPropertyOptional({ type: Number, description: 'Distance in meters' })
+  distance?: number;
 }
