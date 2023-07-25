@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TerryRepository } from '../terry.repository';
-import { TerryInputDto } from '../dto/terry.dto';
+import { TerryInputDto, TerryUpdateInputDto } from '../dto/terry.dto';
 import { TerryFilterInputDto } from '../dto/terry-filter.dto';
 import { MongoLocationType } from 'src/shared/mongoose/types';
 import { IPagination } from 'src/shared/types';
@@ -24,6 +24,25 @@ export class TerryService {
       },
     });
     return terry;
+  }
+
+  async updateTerry(data: TerryUpdateInputDto, terryId: string) {
+    const savedTerry = await this.terryRepo.findByIdOrFail(terryId);
+    const terry = await this.terryRepo.updateById(terryId, {
+      ...data,
+      location: {
+        type: MongoLocationType.POINT,
+        coordinates: [
+          data.location?.longitude || savedTerry.location.coordinates[0],
+          data.location?.latitude || savedTerry.location.coordinates[1],
+        ],
+      },
+    });
+    return terry;
+  }
+
+  async deleteTerry(terryId: string) {
+    await this.terryRepo.deleteById(terryId);
   }
 
   async filterTerries(

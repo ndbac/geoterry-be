@@ -1,11 +1,13 @@
 import { HttpStatus } from '@nestjs/common';
 import { IEndpointConfiguration } from 'src/shared/types';
-import { TerryInputDto } from '../dto/terry.dto';
+import { TerryInputDto, TerryUpdateInputDto } from '../dto/terry.dto';
 import { TerryResponseDto } from '../dto/terry-response.dto';
 import { TerryFilterInputDto } from '../dto/terry-filter.dto';
 
 export enum ETerryOperation {
   BUILDER_CREATE_TERRY = 'builderCreateTerry',
+  BUILDER_UPDATE_TERRY = 'builderUpdateTerry',
+  BUILDER_DELETE_TERRY = 'builderDeleteTerry',
   BUILDER_GET_TERRIES = 'builderGetTerries',
 }
 
@@ -28,6 +30,38 @@ export const TERRY_ENDPOINT_CONFIG: Record<
       {
         type: TerryResponseDto,
         status: HttpStatus.CREATED,
+      },
+    ],
+  },
+  [ETerryOperation.BUILDER_UPDATE_TERRY]: {
+    operationId: ETerryOperation.BUILDER_UPDATE_TERRY,
+    summary: 'Builder update terry',
+    body: {
+      type: TerryUpdateInputDto,
+    },
+    params: [
+      {
+        name: 'terryId',
+      },
+    ],
+    responses: [
+      {
+        type: TerryResponseDto,
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [ETerryOperation.BUILDER_DELETE_TERRY]: {
+    operationId: ETerryOperation.BUILDER_DELETE_TERRY,
+    summary: 'Builder delete terry',
+    params: [
+      {
+        name: 'terryId',
+      },
+    ],
+    responses: [
+      {
+        status: HttpStatus.OK,
       },
     ],
   },

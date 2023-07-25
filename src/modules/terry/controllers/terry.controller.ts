@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Post,
+  Put,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -37,9 +39,30 @@ export class TerryController {
   @AuthEndpoint({
     namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
   })
+  @UseInterceptors(NormalizedGeoJsonPointInterceptor)
   @Post()
   create(@Body() data: TerryInputDto, @Param('profileId') profileId: string) {
     return this.terryService.createTerry(data, profileId);
+  }
+
+  @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_UPDATE_TERRY])
+  @AuthEndpoint({
+    namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
+  })
+  @UseInterceptors(NormalizedGeoJsonPointInterceptor)
+  @Put(':terryId')
+  update(@Body() data: TerryInputDto, @Param('terryId') terryId: string) {
+    return this.terryService.createTerry(data, terryId);
+  }
+
+  @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_DELETE_TERRY])
+  @AuthEndpoint({
+    namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
+  })
+  @UseInterceptors(NormalizedGeoJsonPointInterceptor)
+  @Delete(':terryId')
+  delete(@Param('terryId') terryId: string) {
+    return this.terryService.deleteTerry(terryId);
   }
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_GET_TERRIES])
