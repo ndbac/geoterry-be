@@ -16,10 +16,10 @@ export class TerrySearchHelper {
       textSearch,
       location,
       distance,
-    }: TerryFilterInputDto & { profileId: string },
+    }: TerryFilterInputDto & { profileId?: string },
     pagination: IPagination,
   ) {
-    const commonFilter = { profileId };
+    const commonFilter = profileId ? { profileId } : {};
     const textSearchOption = buildRegexSearchOptions(textSearch, ['name']);
     let baseQuery = [] as any;
     if (_.isNil(location)) {

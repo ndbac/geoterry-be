@@ -30,18 +30,42 @@ export class DistanceQueryDto {
 }
 
 export class TerryFilterInputDto {
-  @ApiProperty({ type: String })
+  @ApiPropertyOptional({ type: String })
   @IsString()
   @IsOptional()
   textSearch?: string;
 
-  @ApiProperty({ type: LocationDto })
+  @ApiPropertyOptional({ type: LocationDto })
   @ValidateNested()
   @Type(() => LocationDto)
   @IsOptional()
   location?: LocationDto;
 
-  @ApiProperty({ type: DistanceQueryDto })
+  @ApiPropertyOptional({ type: DistanceQueryDto })
+  @ValidateNested()
+  @Type(() => DistanceQueryDto)
+  @IsOptional()
+  distance?: DistanceQueryDto;
+}
+
+export class PublicTerryFilterInputDto {
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  textSearch?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  terryId?: string;
+
+  @ApiPropertyOptional({ type: LocationDto })
+  @ValidateNested()
+  @Type(() => LocationDto)
+  @IsOptional()
+  location?: LocationDto;
+
+  @ApiPropertyOptional({ type: DistanceQueryDto })
   @ValidateNested()
   @Type(() => DistanceQueryDto)
   @IsOptional()

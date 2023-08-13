@@ -9,6 +9,7 @@ export enum ETerryOperation {
   BUILDER_UPDATE_TERRY = 'builderUpdateTerry',
   BUILDER_DELETE_TERRY = 'builderDeleteTerry',
   BUILDER_GET_TERRIES = 'builderGetTerries',
+  PUBLIC_GET_TERRIES = 'publicGetTerries',
 }
 
 export const TERRY_ENDPOINT_CONFIG: Record<
@@ -76,6 +77,19 @@ export const TERRY_ENDPOINT_CONFIG: Record<
         name: 'profileId',
       },
     ],
+    responses: [
+      {
+        type: [TerryResponseDto],
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [ETerryOperation.PUBLIC_GET_TERRIES]: {
+    operationId: ETerryOperation.PUBLIC_GET_TERRIES,
+    summary: 'Public get terries',
+    body: {
+      type: TerryFilterInputDto,
+    },
     responses: [
       {
         type: [TerryResponseDto],

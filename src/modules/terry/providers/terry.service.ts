@@ -41,8 +41,8 @@ export class TerryService {
     return terry;
   }
 
-  async deleteTerry(terryId: string) {
-    await this.terryRepo.deleteById(terryId);
+  async deleteTerry(terryId: string, profileId: string) {
+    await this.terryRepo.deleteOne({ _id: terryId, profileId });
   }
 
   async filterTerries(

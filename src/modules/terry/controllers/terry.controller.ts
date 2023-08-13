@@ -61,8 +61,11 @@ export class TerryController {
   })
   @UseInterceptors(NormalizedGeoJsonPointInterceptor)
   @Delete(':terryId')
-  delete(@Param('terryId') terryId: string) {
-    return this.terryService.deleteTerry(terryId);
+  delete(
+    @Param('terryId') terryId: string,
+    @Param('profileId') profileId: string,
+  ) {
+    return this.terryService.deleteTerry(terryId, profileId);
   }
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_GET_TERRIES])
