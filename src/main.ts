@@ -37,7 +37,7 @@ async function bootstrap() {
   initializeSwaggerDoc(app);
   initializeSentry();
   app.use(express.text({ type: 'text/plain' }));
-  await app.listen(config.get<string>('server.port'));
+  await app.listen(process.env.PORT || config.get<string>('server.port'));
 }
 
 bootstrap()
