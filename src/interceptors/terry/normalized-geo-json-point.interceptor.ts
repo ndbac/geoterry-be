@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { map } from 'rxjs';
 import { TerryDocument } from 'src/modules/terry/terry.model';
+import { convertObject } from 'src/shared/mongoose/helpers';
 import { Document2Interface } from 'src/shared/mongoose/types';
 
 @Injectable()
@@ -30,7 +31,7 @@ export class NormalizedGeoJsonPointInterceptor implements NestInterceptor {
 
   normalizedGeoJsonPoint(terry: Document2Interface<TerryDocument>) {
     return {
-      ...terry,
+      ...convertObject(terry),
       location: {
         latitude: terry.location.coordinates[1],
         longitude: terry.location.coordinates[0],

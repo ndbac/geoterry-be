@@ -16,6 +16,7 @@ export class TerrySearchHelper {
       textSearch,
       location,
       distance,
+      categoryIds,
     }: TerryFilterInputDto & { profileId?: string },
     pagination: IPagination,
   ) {
@@ -29,6 +30,9 @@ export class TerrySearchHelper {
             $and: [
               commonFilter,
               ...(_.isEmpty(textSearchOption.$or) ? [] : [textSearchOption]),
+              ...(!_.isEmpty(categoryIds)
+                ? [{ categoryIds: { $in: categoryIds } }]
+                : []),
             ],
           },
         },
@@ -46,7 +50,11 @@ export class TerrySearchHelper {
             maxDistance:
               distance?.max || TERRY_FILTER_MAX_DISTANCE_IN_METER_DEFAULT,
             spherical: true,
-            query: { ...commonFilter, ...textSearchOption },
+            query: {
+              ...commonFilter,
+              ...textSearchOption,
+              ...(categoryIds ? { categoryIds: { $in: categoryIds } } : []),
+            },
             distanceField: 'distance',
           },
         },

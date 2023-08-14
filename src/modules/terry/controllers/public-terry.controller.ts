@@ -18,15 +18,20 @@ import {
   PaginationSwaggerQuery,
 } from 'src/decorators/pagination.decorator';
 import { PublicTerryService } from '../providers/public-terry.service';
+import { InjectCategoriesToTerryInterceptor } from 'src/interceptors/terry/inject-categories-to-terry.interceptor';
 
-@Controller('profile/terry')
+@Controller('public/terry')
 @ApiTags('public.terry')
 @UseFilters(I18nExceptionFilter)
 export class PublicTerryController {
   constructor(private readonly terryService: PublicTerryService) {}
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.PUBLIC_GET_TERRIES])
-  @UseInterceptors(NormalizedGeoJsonPointInterceptor, PaginationInterceptor)
+  @UseInterceptors(
+    InjectCategoriesToTerryInterceptor,
+    NormalizedGeoJsonPointInterceptor,
+    PaginationInterceptor,
+  )
   @PaginationSwaggerQuery()
   @Post('filter')
   filter(

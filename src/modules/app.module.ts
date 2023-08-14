@@ -4,6 +4,7 @@ import { DBRootModule } from './adapters/db/db-root.module';
 import { HealthModule } from './health/health.module';
 import { ProfileModule } from './profile/profile.module';
 import { TerryModule } from './terry/terry.module';
+import { TerryCategoryModule } from './terry-category/terry-category.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { TerryModule } from './terry/terry.module';
     AccountModule,
     ProfileModule,
     TerryModule,
+    TerryCategoryModule,
   ],
 })
 export class AppModule {}

@@ -9,6 +9,7 @@ import { ProfileCoreModule } from '../profile/profile.core.module';
 import { TerrySearchHelper } from './providers/terry-search.helper';
 import { PublicTerryController } from './controllers/public-terry.controller';
 import { PublicTerryService } from './providers/public-terry.service';
+import { TerryCategoryCoreModule } from '../terry-category/terry-category.core.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PublicTerryService } from './providers/public-terry.service';
     AccountCoreModule,
     CommonModule,
     ProfileCoreModule,
+    TerryCategoryCoreModule,
   ],
   providers: [TerryService, TerrySearchHelper, PublicTerryService],
   controllers: [TerryController, PublicTerryController],

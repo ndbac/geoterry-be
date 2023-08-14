@@ -77,6 +77,13 @@ export const TERRY_ENDPOINT_CONFIG: Record<
         name: 'profileId',
       },
     ],
+    query: [
+      {
+        name: 'includeCategoryData',
+        type: Boolean,
+        required: false,
+      },
+    ],
     responses: [
       {
         type: [TerryResponseDto],
@@ -90,6 +97,13 @@ export const TERRY_ENDPOINT_CONFIG: Record<
     body: {
       type: TerryFilterInputDto,
     },
+    query: [
+      {
+        name: 'includeCategoryData',
+        type: Boolean,
+        required: false,
+      },
+    ],
     responses: [
       {
         type: [TerryResponseDto],

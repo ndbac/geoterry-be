@@ -43,6 +43,11 @@ export class TerryInputDto {
   @IsOptional()
   photoUrls?: string[];
 
+  @ApiPropertyOptional({ type: [String] })
+  @IsString({ each: true })
+  @IsOptional()
+  categoryIds?: string[];
+
   @ApiProperty({ type: TerryLocationDto })
   @IsNotEmpty()
   @Type(() => TerryLocationDto)
@@ -50,23 +55,16 @@ export class TerryInputDto {
   location: TerryLocationDto;
 }
 
-export class TerryUpdateLocationDto {
-  @ApiPropertyOptional({ type: Number })
-  @IsNumber()
-  @IsOptional()
-  latitude?: number;
-
-  @ApiPropertyOptional({ type: Number })
-  @IsNumber()
-  @IsOptional()
-  longitude?: number;
-}
-
 export class TerryUpdateInputDto {
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsOptional()
   name?: string;
+
+  @ApiPropertyOptional({ type: [String] })
+  @IsString({ each: true })
+  @IsOptional()
+  categoryIds?: string[];
 
   @ApiPropertyOptional({ type: String })
   @IsString()
@@ -83,9 +81,9 @@ export class TerryUpdateInputDto {
   @IsOptional()
   photoUrls?: string[];
 
-  @ApiPropertyOptional({ type: TerryUpdateLocationDto })
+  @ApiPropertyOptional({ type: TerryLocationDto })
   @IsOptional()
-  @Type(() => TerryUpdateLocationDto)
+  @Type(() => TerryLocationDto)
   @ValidateNested()
-  location?: TerryUpdateLocationDto;
+  location?: TerryLocationDto;
 }

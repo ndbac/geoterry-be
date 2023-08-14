@@ -31,6 +31,9 @@ export class TerryDocument extends BaseDocument {
   @Prop({ type: [String] })
   photoUrls?: string[];
 
+  @Prop({ type: [String] })
+  categoryIds?: string[];
+
   @Prop({ required: true })
   isAvailable: boolean;
 

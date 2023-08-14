@@ -35,6 +35,11 @@ export class TerryFilterInputDto {
   @IsOptional()
   textSearch?: string;
 
+  @ApiPropertyOptional({ type: [String] })
+  @IsString({ each: true })
+  @IsOptional()
+  categoryIds?: string[];
+
   @ApiPropertyOptional({ type: LocationDto })
   @ValidateNested()
   @Type(() => LocationDto)
@@ -58,6 +63,11 @@ export class PublicTerryFilterInputDto {
   @IsString()
   @IsOptional()
   terryId?: string;
+
+  @ApiPropertyOptional({ type: [String] })
+  @IsString({ each: true })
+  @IsOptional()
+  categoryIds?: string[];
 
   @ApiPropertyOptional({ type: LocationDto })
   @ValidateNested()

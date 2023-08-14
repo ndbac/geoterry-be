@@ -30,6 +30,9 @@ export class TerryResponseDto extends BaseDbResponseDto {
   @ApiPropertyOptional({ type: [String] })
   photoUrls?: string[];
 
+  @ApiPropertyOptional({ type: [String] })
+  categoryIds?: string[];
+
   @ApiProperty({ type: TerryLocationResDto })
   location: TerryLocationResDto;
 

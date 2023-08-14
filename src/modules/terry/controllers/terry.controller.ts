@@ -52,7 +52,7 @@ export class TerryController {
   @UseInterceptors(NormalizedGeoJsonPointInterceptor)
   @Put(':terryId')
   update(@Body() data: TerryInputDto, @Param('terryId') terryId: string) {
-    return this.terryService.createTerry(data, terryId);
+    return this.terryService.updateTerry(data, terryId);
   }
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_DELETE_TERRY])

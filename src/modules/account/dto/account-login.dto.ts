@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 import { IsValidPhoneNumber } from 'src/decorators/is-valid-phone-number.decorator';
-import { EIdentifierType } from 'src/shared/types';
+import { EIdentifierType, IamNamespace } from 'src/shared/types';
 
 export class AccountLoginInputDto {
   @ApiProperty({ type: String })
@@ -23,6 +23,11 @@ export class AccountLoginInputDto {
   @IsNotEmpty()
   @IsEnum(EIdentifierType)
   identifierType: EIdentifierType;
+
+  @ApiProperty({ type: String, enum: IamNamespace })
+  @IsNotEmpty()
+  @IsEnum(IamNamespace)
+  namespace: IamNamespace;
 }
 
 export class AccountRefreshToken {

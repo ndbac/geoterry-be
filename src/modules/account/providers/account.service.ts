@@ -138,6 +138,7 @@ export class AccountService {
       {
         identifier: input.identifier,
         identifierType: input.identifierType,
+        namespace: input.namespace,
       },
       {
         $set: { 'credentials.refreshToken': refreshToken },
