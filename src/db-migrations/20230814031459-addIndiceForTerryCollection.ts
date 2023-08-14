@@ -8,7 +8,7 @@ export = {
         profileId: 1,
         categoryIds: 1,
       },
-      { name: 'profileId_1_categoryIds_1', unique: true },
+      { name: 'profileId_1_categoryIds_1' },
     );
   },
   async down(db: Db) {
