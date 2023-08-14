@@ -8,6 +8,8 @@ import {
   IsUrl,
   IsNumber,
   ValidateNested,
+  Min,
+  Max,
 } from 'class-validator';
 
 export class TerryLocationDto {
@@ -20,6 +22,26 @@ export class TerryLocationDto {
   @IsNumber()
   @IsNotEmpty()
   longitude: number;
+}
+
+export class TerryMetadataDto {
+  @ApiPropertyOptional({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  size?: number;
+
+  @ApiPropertyOptional({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  difficulty?: number;
+
+  @ApiPropertyOptional({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  terrain?: number;
 }
 
 export class TerryInputDto {
@@ -53,6 +75,12 @@ export class TerryInputDto {
   @Type(() => TerryLocationDto)
   @ValidateNested()
   location: TerryLocationDto;
+
+  @ApiPropertyOptional({ type: TerryMetadataDto })
+  @IsOptional()
+  @Type(() => TerryMetadataDto)
+  @ValidateNested()
+  metadata?: TerryMetadataDto;
 }
 
 export class TerryUpdateInputDto {
@@ -86,4 +114,10 @@ export class TerryUpdateInputDto {
   @Type(() => TerryLocationDto)
   @ValidateNested()
   location?: TerryLocationDto;
+
+  @ApiPropertyOptional({ type: TerryMetadataDto })
+  @IsOptional()
+  @Type(() => TerryMetadataDto)
+  @ValidateNested()
+  metadata?: TerryMetadataDto;
 }

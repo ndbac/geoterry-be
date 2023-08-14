@@ -9,7 +9,9 @@ export enum ETerryOperation {
   BUILDER_UPDATE_TERRY = 'builderUpdateTerry',
   BUILDER_DELETE_TERRY = 'builderDeleteTerry',
   BUILDER_GET_TERRIES = 'builderGetTerries',
+  BUILDER_GET_TERRY = 'builderGetTerry',
   PUBLIC_GET_TERRIES = 'publicGetTerries',
+  PUBLIC_GET_TERRY = 'publicGetTerry',
 }
 
 export const TERRY_ENDPOINT_CONFIG: Record<
@@ -83,10 +85,37 @@ export const TERRY_ENDPOINT_CONFIG: Record<
         type: Boolean,
         required: false,
       },
+      {
+        name: 'includeProfileData',
+        type: Boolean,
+        required: false,
+      },
     ],
     responses: [
       {
         type: [TerryResponseDto],
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [ETerryOperation.BUILDER_GET_TERRY]: {
+    operationId: ETerryOperation.BUILDER_GET_TERRY,
+    summary: 'Builder get terry',
+    query: [
+      {
+        name: 'includeCategoryData',
+        type: Boolean,
+        required: false,
+      },
+      {
+        name: 'includeProfileData',
+        type: Boolean,
+        required: false,
+      },
+    ],
+    responses: [
+      {
+        type: TerryResponseDto,
         status: HttpStatus.OK,
       },
     ],
@@ -103,10 +132,37 @@ export const TERRY_ENDPOINT_CONFIG: Record<
         type: Boolean,
         required: false,
       },
+      {
+        name: 'includeProfileData',
+        type: Boolean,
+        required: false,
+      },
     ],
     responses: [
       {
         type: [TerryResponseDto],
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [ETerryOperation.PUBLIC_GET_TERRY]: {
+    operationId: ETerryOperation.PUBLIC_GET_TERRY,
+    summary: 'Public get terry',
+    query: [
+      {
+        name: 'includeCategoryData',
+        type: Boolean,
+        required: false,
+      },
+      {
+        name: 'includeProfileData',
+        type: Boolean,
+        required: false,
+      },
+    ],
+    responses: [
+      {
+        type: TerryResponseDto,
         status: HttpStatus.OK,
       },
     ],

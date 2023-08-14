@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Put,
@@ -26,6 +27,8 @@ import {
   Pagination,
   PaginationSwaggerQuery,
 } from 'src/decorators/pagination.decorator';
+import { InjectCategoriesToTerryInterceptor } from 'src/interceptors/terry/inject-categories-to-terry.interceptor';
+import { InjectProfileToTerryInterceptor } from 'src/interceptors/terry/inject-profile-to-terry.interceptor';
 
 @Controller('profile/:profileId/terry')
 @ApiTags('builder.terry')
@@ -50,8 +53,8 @@ export class TerryController {
     namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
   })
   @UseInterceptors(NormalizedGeoJsonPointInterceptor)
-  @Put(':terryId')
-  update(@Body() data: TerryInputDto, @Param('terryId') terryId: string) {
+  @Put(':id')
+  update(@Body() data: TerryInputDto, @Param('id') terryId: string) {
     return this.terryService.updateTerry(data, terryId);
   }
 
@@ -60,11 +63,8 @@ export class TerryController {
     namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
   })
   @UseInterceptors(NormalizedGeoJsonPointInterceptor)
-  @Delete(':terryId')
-  delete(
-    @Param('terryId') terryId: string,
-    @Param('profileId') profileId: string,
-  ) {
+  @Delete(':id')
+  delete(@Param('id') terryId: string, @Param('profileId') profileId: string) {
     return this.terryService.deleteTerry(terryId, profileId);
   }
 
@@ -72,7 +72,12 @@ export class TerryController {
   @AuthEndpoint({
     namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
   })
-  @UseInterceptors(NormalizedGeoJsonPointInterceptor, PaginationInterceptor)
+  @UseInterceptors(
+    InjectProfileToTerryInterceptor,
+    InjectCategoriesToTerryInterceptor,
+    NormalizedGeoJsonPointInterceptor,
+    PaginationInterceptor,
+  )
   @PaginationSwaggerQuery()
   @Post('filter')
   filter(
@@ -81,5 +86,22 @@ export class TerryController {
     @Pagination() pagination: IPagination,
   ) {
     return this.terryService.filterTerries(data, profileId, pagination);
+  }
+
+  @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_GET_TERRY])
+  @AuthEndpoint({
+    namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
+  })
+  @UseInterceptors(
+    InjectProfileToTerryInterceptor,
+    InjectCategoriesToTerryInterceptor,
+    NormalizedGeoJsonPointInterceptor,
+  )
+  @Get(':id')
+  getTerry(
+    @Param('id') terryId: string,
+    @Param('profileId') profileId: string,
+  ) {
+    return this.terryService.getTerryById(terryId, profileId);
   }
 }

@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
   UseFilters,
   UseInterceptors,
@@ -19,6 +21,7 @@ import {
 } from 'src/decorators/pagination.decorator';
 import { PublicTerryService } from '../providers/public-terry.service';
 import { InjectCategoriesToTerryInterceptor } from 'src/interceptors/terry/inject-categories-to-terry.interceptor';
+import { InjectProfileToTerryInterceptor } from 'src/interceptors/terry/inject-profile-to-terry.interceptor';
 
 @Controller('public/terry')
 @ApiTags('public.terry')
@@ -28,6 +31,7 @@ export class PublicTerryController {
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.PUBLIC_GET_TERRIES])
   @UseInterceptors(
+    InjectProfileToTerryInterceptor,
     InjectCategoriesToTerryInterceptor,
     NormalizedGeoJsonPointInterceptor,
     PaginationInterceptor,
@@ -39,5 +43,16 @@ export class PublicTerryController {
     @Pagination() pagination: IPagination,
   ) {
     return this.terryService.filterTerries(data, pagination);
+  }
+
+  @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.PUBLIC_GET_TERRY])
+  @UseInterceptors(
+    InjectProfileToTerryInterceptor,
+    InjectCategoriesToTerryInterceptor,
+    NormalizedGeoJsonPointInterceptor,
+  )
+  @Get(':id')
+  getTerry(@Param('id') terryId: string) {
+    return this.terryService.getTerryById(terryId);
   }
 }

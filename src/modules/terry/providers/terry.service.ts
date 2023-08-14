@@ -30,6 +30,10 @@ export class TerryService {
     const savedTerry = await this.terryRepo.findByIdOrFail(terryId);
     const terry = await this.terryRepo.updateById(terryId, {
       ...data,
+      metadata: {
+        ...savedTerry.metadata,
+        ...data.metadata,
+      },
       location: {
         type: MongoLocationType.POINT,
         coordinates: [
@@ -43,6 +47,10 @@ export class TerryService {
 
   async deleteTerry(terryId: string, profileId: string) {
     await this.terryRepo.deleteOne({ _id: terryId, profileId });
+  }
+
+  async getTerryById(terryId: string, profileId: string) {
+    return this.terryRepo.findOneOrFail({ _id: terryId, profileId });
   }
 
   async filterTerries(

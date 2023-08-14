@@ -7,6 +7,18 @@ import { DefaultSchemaOptions } from 'src/shared/mongoose/schema-option';
 import { MongoLocationType } from 'src/shared/mongoose/types';
 
 @Schema({ _id: false })
+export class MetadataDocument extends EmbeddedDocument {
+  @Prop({ required: false })
+  size?: number;
+
+  @Prop({ required: false })
+  difficulty?: number;
+
+  @Prop({ required: false })
+  terrain?: number;
+}
+
+@Schema({ _id: false })
 export class LocationDocument extends EmbeddedDocument {
   // GeoJSON Point
   @Prop({ default: MongoLocationType.POINT })
@@ -41,4 +53,9 @@ export class TerryDocument extends BaseDocument {
     type: LocationDocument.schema,
   })
   location: LocationDocument;
+
+  @Prop({
+    type: MetadataDocument.schema,
+  })
+  metadata?: MetadataDocument;
 }

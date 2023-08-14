@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber } from 'class-validator';
+import { TerryCategoryResDto } from 'src/modules/terry-category/dto/terry-category.dto';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
 
 export class TerryLocationResDto {
@@ -12,6 +13,28 @@ export class TerryLocationResDto {
   @IsNumber()
   @IsNotEmpty()
   longitude: number;
+}
+
+export class TerryMetadataResDto {
+  @ApiPropertyOptional({ type: Number })
+  size?: number;
+
+  @ApiPropertyOptional({ type: Number })
+  difficulty?: number;
+
+  @ApiPropertyOptional({ type: Number })
+  terrain?: number;
+}
+
+export class ProfileDto {
+  @ApiProperty({ type: String })
+  id: string;
+
+  @ApiProperty({ type: String })
+  displayName: string;
+
+  @ApiPropertyOptional({ type: String })
+  logoUrl?: string;
 }
 
 export class TerryResponseDto extends BaseDbResponseDto {
@@ -35,6 +58,15 @@ export class TerryResponseDto extends BaseDbResponseDto {
 
   @ApiProperty({ type: TerryLocationResDto })
   location: TerryLocationResDto;
+
+  @ApiPropertyOptional({ type: TerryMetadataResDto })
+  metadata?: TerryMetadataResDto;
+
+  @ApiPropertyOptional({ type: ProfileDto })
+  profile?: ProfileDto;
+
+  @ApiPropertyOptional({ type: [TerryCategoryResDto] })
+  categories?: TerryCategoryResDto[];
 
   @ApiPropertyOptional({ type: Number, description: 'Distance in meters' })
   distance?: number;

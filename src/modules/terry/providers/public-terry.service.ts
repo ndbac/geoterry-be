@@ -36,4 +36,8 @@ export class PublicTerryService {
       headers: getPaginationHeaders(pagination, total),
     };
   }
+
+  async getTerryById(terryId: string) {
+    return this.terryRepo.findByIdOrFail(terryId);
+  }
 }
