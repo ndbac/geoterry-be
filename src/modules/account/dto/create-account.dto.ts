@@ -43,6 +43,11 @@ export class CreateAccountDto {
 }
 
 export class SendVerificationDto {
+  @ApiProperty({ type: String, enum: IamNamespace })
+  @IsNotEmpty()
+  @IsEnum(IamNamespace)
+  namespace: IamNamespace;
+
   @ApiProperty({ type: String, enum: EIdentifierType })
   @IsNotEmpty()
   @IsEnum(EIdentifierType)

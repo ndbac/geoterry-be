@@ -42,6 +42,7 @@ export class AccountService {
     const account = await this.accountRepo.findOne({
       identifierType: input.identifierType,
       identifier: input.identifier,
+      namespace: input.namespace,
     });
     if (
       (!account && !input.isRecoverPassword) ||
