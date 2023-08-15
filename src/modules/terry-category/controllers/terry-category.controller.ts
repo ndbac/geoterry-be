@@ -15,7 +15,7 @@ import { EndpointConfig } from 'src/decorators/endpoint-config.decorator';
 import { I18nExceptionFilter } from 'src/filters/i18n-exception.filter';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { IamNamespace } from 'src/shared/types';
-import { TerryCategroyService } from '../providers/terry-category.service';
+import { TerryCategoryService } from '../providers/terry-category.service';
 import {
   TERRY_CATEGORY_ENDPOINT_CONFIG,
   ETerryCategoryOperation,
@@ -32,7 +32,7 @@ import {
 @UseGuards(AuthGuard)
 @ApiBearerAuth()
 export class TerryCategoryController {
-  constructor(private readonly terryCategorySvc: TerryCategroyService) {}
+  constructor(private readonly terryCategorySvc: TerryCategoryService) {}
 
   @EndpointConfig(
     TERRY_CATEGORY_ENDPOINT_CONFIG[

@@ -30,7 +30,7 @@ import {
 import { InjectCategoriesToTerryInterceptor } from 'src/interceptors/terry/inject-categories-to-terry.interceptor';
 import { InjectProfileToTerryInterceptor } from 'src/interceptors/terry/inject-profile-to-terry.interceptor';
 
-@Controller('profile/:profileId/terry')
+@Controller('builder/:profileId/terry')
 @ApiTags('builder.terry')
 @UseFilters(I18nExceptionFilter)
 @UseGuards(AuthGuard, ProfileAccessGuard)

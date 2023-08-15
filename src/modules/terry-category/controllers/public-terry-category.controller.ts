@@ -7,14 +7,14 @@ import {
   ETerryCategoryOperation,
 } from './endpoint-config';
 import { FilterTerryCategoryInputDto } from '../dto/terry-category.dto';
-import { PublicTerryCategroyService } from '../providers/public-terry-category.service';
+import { PublicTerryCategoryService } from '../providers/public-terry-category.service';
 
 @Controller('public/terry-category')
 @ApiTags('public.terryCategory')
 @UseFilters(I18nExceptionFilter)
 export class PublicTerryCategoryController {
   constructor(
-    private readonly publicTerryCategorySvc: PublicTerryCategroyService,
+    private readonly publicTerryCategorySvc: PublicTerryCategoryService,
   ) {}
 
   @EndpointConfig(

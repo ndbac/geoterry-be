@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { FilterTerryCategoryInputDto } from '../dto/terry-category.dto';
 
 @Injectable()
-export class PublicTerryCategroyService {
+export class PublicTerryCategoryService {
   constructor(private readonly terryCategoryRepo: TerryCategoryRepository) {}
 
   async readCategories(input: FilterTerryCategoryInputDto) {

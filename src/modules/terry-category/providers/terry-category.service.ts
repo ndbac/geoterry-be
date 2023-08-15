@@ -10,7 +10,7 @@ import {
 } from '../dto/terry-category.dto';
 
 @Injectable()
-export class TerryCategroyService {
+export class TerryCategoryService {
   constructor(private readonly terryCategoryRepo: TerryCategoryRepository) {}
 
   async createCategory(data: TerryCategoryInputDto) {
