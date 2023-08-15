@@ -6,6 +6,7 @@ import { ProfileModule } from './profile/profile.module';
 import { TerryModule } from './terry/terry.module';
 import { TerryCategoryModule } from './terry-category/terry-category.module';
 import { TerryReportModule } from './terry-report/terry-report.module';
+import { TerryCheckinModule } from './terry-checkin/terry-report.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TerryReportModule } from './terry-report/terry-report.module';
     TerryModule,
     TerryCategoryModule,
     TerryReportModule,
+    TerryCheckinModule,
   ],
 })
 export class AppModule {}

@@ -55,6 +55,11 @@ export class TerryInputDto {
   @IsOptional()
   description?: string;
 
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  hint?: string;
+
   @ApiProperty({ type: Boolean })
   @IsBoolean()
   @IsNotEmpty()
@@ -98,6 +103,11 @@ export class TerryUpdateInputDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  hint?: string;
 
   @ApiPropertyOptional({ type: Boolean })
   @IsBoolean()

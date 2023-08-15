@@ -15,6 +15,8 @@ export enum ErrorCode {
   DUPLICATED_SLUG = 'GEOTERRY_ERROR_0011',
   ALREADY_ONBOARD_PROFILE = 'GEOTERRY_ERROR_0012',
   CANNOT_GENERATE_QR_CODE = 'GEOTERRY_ERROR_0013',
+  INVALID_TERRY = 'GEO_TERRY_ERROR_0014',
+  OUT_OF_DISTANCE = 'GEO_TERRY_ERROR_0015',
 }
 
 export const ERROR_DEFS: Record<
@@ -58,6 +60,12 @@ export const ERROR_DEFS: Record<
     statusCode: HttpStatus.BAD_REQUEST,
   },
   [ErrorCode.ALREADY_ONBOARD_PROFILE]: {
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
+  [ErrorCode.INVALID_TERRY]: {
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
+  [ErrorCode.OUT_OF_DISTANCE]: {
     statusCode: HttpStatus.BAD_REQUEST,
   },
 };

@@ -12,5 +12,7 @@
     "GEOTERRY_ERROR_0010": "名稱重複",
     "GEOTERRY_ERROR_0011": "別名重複",
     "GEOTERRY_ERROR_0012": "個人檔案已存在",
-    "GEOTERRY_ERROR_0013": "無法生成 QR 碼"
+    "GEOTERRY_ERROR_0013": "無法生成 QR 碼",
+    "GEOTERRY_ERROR_0014": "(Need update translation) Terry is invalid",
+    "GEOTERRY_ERROR_0015": "(Need update translation) Out of distance error"
 }

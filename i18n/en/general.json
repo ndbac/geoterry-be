@@ -12,5 +12,7 @@
     "GEOTERRY_ERROR_0010": "Duplicated name",
     "GEOTERRY_ERROR_0011": "Duplicated slug",
     "GEOTERRY_ERROR_0012": "Profile already existed",
-    "GEOTERRY_ERROR_0013": "Cannot generate QR code"
+    "GEOTERRY_ERROR_0013": "Cannot generate QR code",
+    "GEOTERRY_ERROR_0014": "Terry is invalid",
+    "GEOTERRY_ERROR_0015": "Out of distance error"
 }

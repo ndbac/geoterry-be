@@ -57,3 +57,6 @@ imageUpload:
     maxConvertToString: 25MB
   acceptedTypes:
     - image
+
+terry:
+  maxDistanceToCheckin: 30

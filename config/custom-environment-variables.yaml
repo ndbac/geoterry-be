@@ -38,3 +38,8 @@ jsonwebtoken:
     __format: json
   subject: JWT_SUBJECT
   audience: JWT_AUDIENCE
+
+terry:
+  maxDistanceToCheckin:
+    __name: TERRY_MAX_DISTANCE_TO_CHECKIN
+    __format: json
