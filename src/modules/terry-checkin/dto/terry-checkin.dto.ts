@@ -73,3 +73,22 @@ export class TerryCheckinResDto extends BaseDbResponseDto {
   @ApiProperty({ type: HunterLocationDto })
   location: HunterLocationDto;
 }
+
+export class UpdateTerryCheckinInputDto {
+  @ApiPropertyOptional({ type: String })
+  @IsOptional()
+  @IsString()
+  reviewText?: string;
+
+  @ApiPropertyOptional({ type: [String] })
+  @IsOptional()
+  @IsUrl(undefined, { each: true })
+  photoUrls?: string[];
+
+  @ApiPropertyOptional({ type: Number })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  rate?: number;
+}
