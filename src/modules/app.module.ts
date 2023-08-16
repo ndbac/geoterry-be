@@ -8,6 +8,7 @@ import { TerryCategoryModule } from './terry-category/terry-category.module';
 import { TerryReportModule } from './terry-report/terry-report.module';
 import { TerryCheckinModule } from './terry-checkin/terry-report.module';
 import { NotificationModule } from './notification/notification.module';
+import { DeviceModule } from './device/device.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { NotificationModule } from './notification/notification.module';
     TerryReportModule,
     TerryCheckinModule,
     NotificationModule,
+    DeviceModule,
   ],
 })
 export class AppModule {}

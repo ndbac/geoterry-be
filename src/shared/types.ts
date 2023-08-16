@@ -15,6 +15,7 @@ export enum CollectionName {
   TERRY_REPORTS = 'terry-reports',
   TERRY_CHECKINS = 'terry-checkins',
   NOTIFICATION_HISTORIES = 'notification-histories',
+  DEVICES = 'devices',
 }
 
 export type PossiblyAsync<T> = T | Promise<T>;

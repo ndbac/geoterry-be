@@ -5,7 +5,7 @@ import {
   UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { EndpointConfig } from 'src/decorators/endpoint-config.decorator';
 import { I18nExceptionFilter } from 'src/filters/i18n-exception.filter';
 import { IPagination } from 'src/shared/types';
@@ -23,7 +23,6 @@ import { PublicTerryCheckinService } from '../providers/public-terry-checkin.ser
 @Controller('public/terry-checkin')
 @ApiTags('public.terryCheckin')
 @UseFilters(I18nExceptionFilter)
-@ApiBearerAuth()
 export class PublicTerryCheckinController {
   constructor(
     private readonly publicTerryCheckinSvc: PublicTerryCheckinService,

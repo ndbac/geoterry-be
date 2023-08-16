@@ -7,6 +7,7 @@ import { NotifcationHistoryCoreModule } from './notification-history.core.module
 import { NotificationService } from './providers/notification.service';
 import { NotificationController } from './controllers/notification.controller';
 import { FirebaseModule } from '../adapters/firebase/firebase-sdk.module';
+import { DeviceCoreModule } from '../device/device.core.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FirebaseModule } from '../adapters/firebase/firebase-sdk.module';
     AccountCoreModule,
     CommonModule,
     FirebaseModule,
+    DeviceCoreModule,
   ],
   providers: [NotificationService],
   controllers: [NotificationController],

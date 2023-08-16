@@ -4,7 +4,7 @@ import { UserMiddleware } from 'src/middlewares/user.middleware';
 import { AccountCoreModule } from '../account/accounts.core.module';
 import { CommonModule } from '../common/common.module';
 import { UserProfileController } from './controllers/user-profile.controller';
-import { UserProfileService } from './providers/seller-profile.service';
+import { UserProfileService } from './providers/user-profile.service';
 import { AwsSdkModule } from '../adapters/aws/aws-sdk.module';
 import { PublicProfileController } from './controllers/public-profile.controller';
 import { PublicProfileService } from './providers/public-profile.service';

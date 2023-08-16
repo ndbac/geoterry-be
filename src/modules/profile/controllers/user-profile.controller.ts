@@ -15,7 +15,7 @@ import { ExtractCreateProfileInput } from 'src/decorators/profile-input.decorato
 import { I18nExceptionFilter } from 'src/filters/i18n-exception.filter';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { UserCreateProfileInputWithUserContextDto } from '../dto/create-profile.dto';
-import { UserProfileService } from '../providers/seller-profile.service';
+import { UserProfileService } from '../providers/user-profile.service';
 import { ACCOUNT_ENDPOINT_CONFIG, EAccountOperation } from './endpoint-config';
 import { User } from 'src/decorators/user.decorator';
 import { UpdateProfileReqDto } from '../dto/update-profile.dto';
