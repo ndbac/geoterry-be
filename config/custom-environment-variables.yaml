@@ -13,6 +13,11 @@ aws:
   s3:
     bucket: AWS_S3_BUCKET
 
+firebase:
+  config:
+    __name: FIREBASE_CONFIG
+    __format: json
+
 sentry:
   dsn: SENTRY_DSN
   enabled:

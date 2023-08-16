@@ -26,6 +26,9 @@ aws:
     bucket: sample-aws-bucket
     photoPrefixKey: geoterry/photo
 
+firebase:
+  config: sample-firebase-config-in-json
+
 logger:
   formatter: local-custom
 

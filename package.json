@@ -42,6 +42,7 @@
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "express-basic-auth": "^1.2.1",
+    "firebase-admin": "^11.10.1",
     "get-stream": "6.0.1",
     "haversine-distance": "^1.2.1",
     "heic-convert": "^1.2.4",

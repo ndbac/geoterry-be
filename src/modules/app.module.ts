@@ -7,6 +7,7 @@ import { TerryModule } from './terry/terry.module';
 import { TerryCategoryModule } from './terry-category/terry-category.module';
 import { TerryReportModule } from './terry-report/terry-report.module';
 import { TerryCheckinModule } from './terry-checkin/terry-report.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TerryCheckinModule } from './terry-checkin/terry-report.module';
     TerryCategoryModule,
     TerryReportModule,
     TerryCheckinModule,
+    NotificationModule,
   ],
 })
 export class AppModule {}
