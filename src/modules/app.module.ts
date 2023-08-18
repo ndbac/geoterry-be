@@ -10,6 +10,8 @@ import { TerryCheckinModule } from './terry-checkin/terry-report.module';
 import { NotificationModule } from './notification/notification.module';
 import { DeviceModule } from './device/device.module';
 import { WebsocketModule } from './adapters/websocket/websocket.module';
+import { ConversationModule } from './conversations/conversations.module';
+import { MessageModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { WebsocketModule } from './adapters/websocket/websocket.module';
     NotificationModule,
     DeviceModule,
     WebsocketModule,
+    ConversationModule,
+    MessageModule,
   ],
 })
 export class AppModule {}
