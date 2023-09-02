@@ -32,6 +32,9 @@ export class MaskCredentialsInAccountInterceptor implements NestInterceptor {
   }
 
   maskCredInAccount(account: Document2Interface<AccountDocument>) {
-    return _.omit(convertObject(account), ['credentials.password']);
+    return _.omit(convertObject(account), [
+      'credentials.password',
+      'credentials.recoveryCode',
+    ]);
   }
 }

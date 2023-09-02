@@ -24,10 +24,16 @@ import { convertObject } from 'src/shared/mongoose/helpers';
 import { JwtPayload } from 'jsonwebtoken';
 import { isAfter, sub } from 'date-fns';
 import { ErrorCode } from 'src/errors/error-defs';
-import { RecoverAccountDto } from '../dto/account-recover.dto';
+import {
+  RecoverAccountDto,
+  VerifyAccountRecoverOTPDto,
+} from '../dto/account-recover.dto';
 import { AccountDocument } from '../accounts.model';
 import { generateRandomString } from 'src/shared/helpers';
-import { REFRESH_TOKEN_LENGTH } from '../constants';
+import {
+  ACCOUNT_RECOVERY_CODE_LENGTH,
+  REFRESH_TOKEN_LENGTH,
+} from '../constants';
 
 @Injectable()
 export class AccountService {
@@ -100,6 +106,17 @@ export class AccountService {
     };
   }
 
+  async verifyAccountRecoveryOtp(input: VerifyAccountRecoverOTPDto) {
+    const account = await this.isAccountOTPCorrect(input);
+    const recoveryCode = generateRandomString(ACCOUNT_RECOVERY_CODE_LENGTH);
+    await this.accountRepo.updateById(account.id, {
+      'credentials.recoveryCode': recoveryCode,
+    });
+    return {
+      recoveryCode,
+    };
+  }
+
   async recoverAccount(input: RecoverAccountDto) {
     // check eligible for creating account
     const account = await this.isEligibleForRecoveringAccount(input);
@@ -111,6 +128,7 @@ export class AccountService {
         passwordChangedAt: new Date(),
         password: hashedPassword,
         refreshToken,
+        recoveryCode: null,
       },
     };
     const updatedAcc = (await this.accountRepo.updateById(
@@ -284,8 +302,7 @@ export class AccountService {
     }
   }
 
-  private async isEligibleForRecoveringAccount(input: RecoverAccountDto) {
-    // check duplicate account
+  private async isAccountOTPCorrect(input: VerifyAccountRecoverOTPDto) {
     const acc = await this.accountRepo.findOneOrFail({
       namespace: input.namespace,
       identifier: input.identifier,
@@ -296,11 +313,38 @@ export class AccountService {
     switch (input.identifierType) {
       case EIdentifierType.PHONE_NUMBER: {
         const res = await this.twilioService.verifyOTPCode(
-          input.code,
+          input.otp,
           input.identifier,
         );
         if (res.status !== EVerificationStatus.APPROVED)
           return throwStandardError(ErrorCode.INCORRECT_OTP);
+        break;
+      }
+      default:
+        throw new BadRequestException({
+          message: `Recovering account through ${input.identifierType} channel is not supported yet!`,
+          sentryAlertDisabled: true,
+        });
+    }
+
+    return acc;
+  }
+
+  private async isEligibleForRecoveringAccount(input: RecoverAccountDto) {
+    const acc = await this.accountRepo.findOneOrFail({
+      namespace: input.namespace,
+      identifier: input.identifier,
+      identifierType: input.identifierType,
+    });
+
+    // check OTP code
+    switch (input.identifierType) {
+      case EIdentifierType.PHONE_NUMBER: {
+        if (
+          !acc.credentials?.recoveryCode ||
+          acc.credentials.recoveryCode !== input.code
+        )
+          return throwStandardError(ErrorCode.INCORRECT_VEIRFY_CODE);
         break;
       }
       default:

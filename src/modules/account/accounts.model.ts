@@ -16,6 +16,9 @@ export class CredentialsDocument extends EmbeddedDocument {
 
   @Prop({ required: true })
   refreshToken: string;
+
+  @Prop({ required: false })
+  recoveryCode?: string;
 }
 
 @Schema(DefaultSchemaOptions)

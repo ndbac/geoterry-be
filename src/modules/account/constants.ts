@@ -1,1 +1,2 @@
 export const REFRESH_TOKEN_LENGTH = 32;
+export const ACCOUNT_RECOVERY_CODE_LENGTH = 32;

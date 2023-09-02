@@ -14,5 +14,6 @@
     "GEOTERRY_ERROR_0012": "個人檔案已存在",
     "GEOTERRY_ERROR_0013": "無法生成 QR 碼",
     "GEOTERRY_ERROR_0014": "(Need update translation) Terry is invalid",
-    "GEOTERRY_ERROR_0015": "(Need update translation) Out of distance error"
+    "GEOTERRY_ERROR_0015": "(Need update translation) Out of distance error",
+    "GEOTERRY_ERROR_0016": "(Need update translation) Account recovery code invalid"
 }

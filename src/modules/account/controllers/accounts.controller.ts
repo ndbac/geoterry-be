@@ -22,7 +22,10 @@ import {
   AccountRefreshToken,
   AccountUpdateCredentialsDto,
 } from '../dto/account-login.dto';
-import { RecoverAccountDto } from '../dto/account-recover.dto';
+import {
+  RecoverAccountDto,
+  VerifyAccountRecoverOTPDto,
+} from '../dto/account-recover.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { User } from 'src/decorators/user.decorator';
 
@@ -52,6 +55,14 @@ export class AccountController {
   @Post('/otp/send')
   async sendVerification(@Body() data: SendVerificationDto) {
     return this.accountService.sendVerification(data);
+  }
+
+  @EndpointConfig(
+    ACCOUNT_ENDPOINT_CONFIG[EAccountOperation.VERIFY_ACCOUNT_RECOVERY_OTP],
+  )
+  @Put('/otp/verify')
+  async verifyRecoveryOTP(@Body() data: VerifyAccountRecoverOTPDto) {
+    return this.accountService.verifyAccountRecoveryOtp(data);
   }
 
   @EndpointConfig(ACCOUNT_ENDPOINT_CONFIG[EAccountOperation.ACCOUNT_LOGIN])

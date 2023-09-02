@@ -5,7 +5,11 @@ import {
   AccountRefreshToken,
   AccountUpdateCredentialsDto,
 } from '../dto/account-login.dto';
-import { RecoverAccountDto } from '../dto/account-recover.dto';
+import {
+  RecoverAccountDto,
+  VerifyAccountRecoverOTPDto,
+  VerifyAccountRecoverOTPResDto,
+} from '../dto/account-recover.dto';
 import { AccountResponseDto } from '../dto/account.response.dto';
 import {
   CreateAccountDto,
@@ -19,6 +23,7 @@ export enum EAccountOperation {
   REFRESH_TOKEN = 'refreshToken',
   ACCOUNT_RECOVER = 'accountRecover',
   ACCOUNT_UPDATE_CREDENTIALS = 'accountUpdateCredentials',
+  VERIFY_ACCOUNT_RECOVERY_OTP = 'verifyAccountRecoveryOTP',
 }
 
 export const ACCOUNT_ENDPOINT_CONFIG: Record<
@@ -98,6 +103,19 @@ export const ACCOUNT_ENDPOINT_CONFIG: Record<
     responses: [
       {
         type: AccountResponseDto,
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [EAccountOperation.VERIFY_ACCOUNT_RECOVERY_OTP]: {
+    operationId: EAccountOperation.VERIFY_ACCOUNT_RECOVERY_OTP,
+    summary: 'Verify account recovery otp',
+    body: {
+      type: VerifyAccountRecoverOTPDto,
+    },
+    responses: [
+      {
+        type: VerifyAccountRecoverOTPResDto,
         status: HttpStatus.OK,
       },
     ],

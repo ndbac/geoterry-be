@@ -14,5 +14,6 @@
     "GEOTERRY_ERROR_0012": "Hồ sơ đã tồn tại",
     "GEOTERRY_ERROR_0013": "Không thể tạo mã QR",
     "GEOTERRY_ERROR_0014": "Kho báu không hợp lệ",
-    "GEOTERRY_ERROR_0015": "Vượt quá khoảng cách cho phép"
+    "GEOTERRY_ERROR_0015": "Vượt quá khoảng cách cho phép",
+    "GEOTERRY_ERROR_0016": "Code khôi phục tài khoản không đúng"
 }
