@@ -11,6 +11,8 @@ import { PublicTerryController } from './controllers/public-terry.controller';
 import { PublicTerryService } from './providers/public-terry.service';
 import { TerryCategoryCoreModule } from '../terry-category/terry-category.core.module';
 import { TerryUserMappingCoreModule } from '../terry-user-mapping/terry-user-mapping.core.module';
+import { HunterTerryController } from './controllers/hunter-terry.controller';
+import { HunterTerryService } from './providers/hunter-terry.service';
 
 @Module({
   imports: [
@@ -21,11 +23,18 @@ import { TerryUserMappingCoreModule } from '../terry-user-mapping/terry-user-map
     TerryCategoryCoreModule,
     TerryUserMappingCoreModule,
   ],
-  providers: [TerryService, TerrySearchHelper, PublicTerryService],
-  controllers: [TerryController, PublicTerryController],
+  providers: [
+    TerryService,
+    TerrySearchHelper,
+    PublicTerryService,
+    HunterTerryService,
+  ],
+  controllers: [TerryController, PublicTerryController, HunterTerryController],
 })
 export class TerryModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(UserMiddleware).forRoutes(TerryController);
+    consumer
+      .apply(UserMiddleware)
+      .forRoutes(TerryController, HunterTerryController);
   }
 }

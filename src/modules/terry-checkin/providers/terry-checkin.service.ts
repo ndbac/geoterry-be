@@ -117,6 +117,7 @@ export class TerryCheckinService {
       { profileId, terryId },
       {
         rate,
+        checkedIn: true,
       },
       { session },
     );

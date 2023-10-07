@@ -52,6 +52,7 @@ export class PublicTerryController {
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.PUBLIC_GET_TERRY])
   @UseInterceptors(
     InjectProfileToTerryInterceptor,
+    InjectRatingToTerryInterceptor,
     InjectCategoriesToTerryInterceptor,
     NormalizedGeoJsonPointInterceptor,
   )

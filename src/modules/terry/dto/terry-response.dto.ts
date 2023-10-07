@@ -74,6 +74,15 @@ export class TerryResponseDto extends BaseDbResponseDto {
   @ApiPropertyOptional({ type: Number, description: 'Distance in meters' })
   distance?: number;
 
-  @ApiPropertyOptional({ type: Number })
+  @ApiProperty({ type: Number })
   rate: number;
+
+  @ApiPropertyOptional({ type: Boolean })
+  favourite?: boolean;
+
+  @ApiPropertyOptional({ type: Boolean })
+  saved?: boolean;
+
+  @ApiPropertyOptional({ type: Boolean })
+  checkedIn?: boolean;
 }

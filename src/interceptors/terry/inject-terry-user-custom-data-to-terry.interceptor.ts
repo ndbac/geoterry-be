@@ -14,7 +14,7 @@ import { TerryUserMappingRepository } from 'src/modules/terry-user-mapping/terry
 import { TerryUserMappingDocument } from 'src/modules/terry-user-mapping/terry-user-mapping.model';
 
 @Injectable()
-export class InjectRatingToTerryInterceptor implements NestInterceptor {
+export class InjectTerryUserCustomDataInterceptor implements NestInterceptor {
   constructor(
     private readonly terryUserMappingRepo: TerryUserMappingRepository,
   ) {}
@@ -24,50 +24,65 @@ export class InjectRatingToTerryInterceptor implements NestInterceptor {
       Document2Interface<TerryDocument> | Document2Interface<TerryDocument>[]
     >,
   ) {
+    const profileId = ctx.switchToHttp().getRequest().params?.profileId;
     return next
       .handle()
-      .pipe(mergeMap((data) => from(this.injectData(convertObject(data)))));
+      .pipe(
+        mergeMap((data) =>
+          from(this.injectData(convertObject(data), profileId)),
+        ),
+      );
   }
 
   async injectData(
     data:
       | Document2Interface<TerryDocument>
       | Document2Interface<TerryDocument>[],
+    profileId,
   ) {
     const terryUserMappingDataMappedByTerryId =
       await this.getTerryUserMappingMappedByTerryId(
         Array.isArray(data) ? data : [data],
+        profileId,
       );
     if (Array.isArray(data)) {
       data.forEach((terry) => {
-        (terry as any).rate = this.addRatingToTerry(
-          terryUserMappingDataMappedByTerryId[terry.id] || [],
-        );
+        this.addData(terry, terryUserMappingDataMappedByTerryId[terry.id]);
       });
     } else {
-      (data as any).rate = this.addRatingToTerry(
-        terryUserMappingDataMappedByTerryId[data.id] || [],
+      (data as any).rate = this.addData(
+        data,
+        terryUserMappingDataMappedByTerryId[data.id],
       );
     }
     return data;
   }
 
-  addRatingToTerry(terryUserMappingData: TerryUserMappingDocument[]) {
-    if (_.isEmpty(terryUserMappingData)) return 5;
-    const totalRating = terryUserMappingData.reduce(
-      (accumulator, current) => accumulator + (current?.rate || 0),
-      0,
-    );
-    return totalRating / terryUserMappingData.length;
+  addData(
+    terry: Document2Interface<TerryDocument>,
+    terryUserMappingData: TerryUserMappingDocument,
+  ) {
+    if (!terryUserMappingData) return;
+    if (terryUserMappingData.favourite) {
+      (terry as any).favourite = terryUserMappingData.favourite;
+    }
+    if (terryUserMappingData.saved) {
+      (terry as any).saved = terryUserMappingData.saved;
+    }
+    if (terryUserMappingData.checkedIn) {
+      (terry as any).checkedIn = terryUserMappingData.checkedIn;
+    }
   }
 
   async getTerryUserMappingMappedByTerryId(
     terries: Document2Interface<TerryDocument>[],
+    profileId: string,
   ) {
     const terryIds = terries.map((terry) => terry.id);
     const terryUserMappingData = await this.terryUserMappingRepo.find({
       terryId: { $in: terryIds },
+      profileId,
     });
-    return _.groupBy(terryUserMappingData, 'terryId');
+    return _.mapKeys(terryUserMappingData, 'terryId');
   }
 }
