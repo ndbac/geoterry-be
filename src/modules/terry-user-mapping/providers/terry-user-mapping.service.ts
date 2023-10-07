@@ -25,9 +25,7 @@ export class TerryUserMappingService {
       { profileId, terryId },
       {
         ...(data.saved ? { saved: data.saved } : []),
-        ...(data.checkedIn ? { checkedIn: data.checkedIn } : []),
         ...(data.favourite ? { favourite: data.favourite } : []),
-        ...(data.rate ? { rate: data.rate } : []),
       },
     );
   }
