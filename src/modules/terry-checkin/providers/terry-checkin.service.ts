@@ -13,28 +13,41 @@ import { FilterTerryCheckinDto } from '../dto/terry-filter.dto';
 import _ from 'lodash';
 import { IPagination } from 'src/shared/types';
 import { getPaginationHeaders } from 'src/shared/pagination.helpers';
+import { TerryUserMappingRepository } from 'src/modules/terry-user-mapping/terry-user-mapping.repository';
+import { ClientSession } from 'mongoose';
 
 @Injectable()
 export class TerryCheckinService {
   constructor(
     private readonly terryCheckinRepo: TerryCheckinRepository,
     private readonly terryRepo: TerryRepository,
+    private readonly terryUserMappingRepo: TerryUserMappingRepository,
   ) {}
 
   async checkin(data: TerryCheckinInputDto, profileId: string) {
-    const terry = await this.terryRepo.findByIdOrFail(data.terryId);
-    if (!terry.isAvailable || terry.profileId === profileId) {
-      return throwStandardError(ErrorCode.INVALID_TERRY);
-    }
-    const maxDistance = config.get<number>('terry.maxDistanceToCheckin');
-    const distance = haversine(data.location, {
-      latitude: terry.location.coordinates[1],
-      longitude: terry.location.coordinates[0],
+    return this.terryRepo.withTransaction(async (session) => {
+      const terry = await this.terryRepo.findByIdOrFail(data.terryId);
+      if (!terry.isAvailable || terry.profileId === profileId) {
+        return throwStandardError(ErrorCode.INVALID_TERRY);
+      }
+      const maxDistance = config.get<number>('terry.maxDistanceToCheckin');
+      const distance = haversine(data.location, {
+        latitude: terry.location.coordinates[1],
+        longitude: terry.location.coordinates[0],
+      });
+      if (distance > maxDistance) {
+        return throwStandardError(ErrorCode.OUT_OF_DISTANCE);
+      }
+      if (data.rate) {
+        await this.updateTerryUserMappingRating(
+          data.rate,
+          terry.id,
+          profileId,
+          session,
+        );
+      }
+      return this.terryCheckinRepo.create({ profileId, ...data }, { session });
     });
-    if (distance > maxDistance) {
-      return throwStandardError(ErrorCode.OUT_OF_DISTANCE);
-    }
-    return this.terryCheckinRepo.create({ profileId, ...data });
   }
 
   async update(
@@ -42,7 +55,27 @@ export class TerryCheckinService {
     checkinId: string,
     profileId: string,
   ) {
-    return this.terryCheckinRepo.updateOne({ _id: checkinId, profileId }, data);
+    return this.terryRepo.withTransaction(async (session) => {
+      const checkinRecord = await this.terryCheckinRepo.findByIdOrFail(
+        checkinId,
+        {
+          session,
+        },
+      );
+      if (data.rate) {
+        await this.updateTerryUserMappingRating(
+          data.rate,
+          checkinRecord.terryId,
+          profileId,
+          session,
+        );
+      }
+      return this.terryCheckinRepo.updateOne(
+        { _id: checkinId, profileId },
+        data,
+        { session },
+      );
+    });
   }
 
   async get(checkinId: string, profileId: string) {
@@ -72,5 +105,20 @@ export class TerryCheckinService {
       items: data,
       headers: getPaginationHeaders(pagination, total),
     };
+  }
+
+  private async updateTerryUserMappingRating(
+    rate: number,
+    terryId: string,
+    profileId: string,
+    session: ClientSession,
+  ) {
+    await this.terryUserMappingRepo.updateOneOrCreate(
+      { profileId, terryId },
+      {
+        rate,
+      },
+      { session },
+    );
   }
 }

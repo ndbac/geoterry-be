@@ -9,6 +9,7 @@ import { TerryCheckinController } from './controllers/terry-checkin.controller';
 import { TerryCoreModule } from '../terry/terry.core.module';
 import { PublicTerryCheckinService } from './providers/public-terry-checkin.service';
 import { PublicTerryCheckinController } from './controllers/public-terry-checkin.controller';
+import { TerryUserMappingCoreModule } from '../terry-user-mapping/terry-user-mapping.core.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PublicTerryCheckinController } from './controllers/public-terry-checkin
     AccountCoreModule,
     CommonModule,
     TerryCoreModule,
+    TerryUserMappingCoreModule,
   ],
   providers: [TerryCheckinService, PublicTerryCheckinService],
   controllers: [TerryCheckinController, PublicTerryCheckinController],

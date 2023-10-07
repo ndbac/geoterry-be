@@ -22,6 +22,8 @@ import {
 import { PublicTerryService } from '../providers/public-terry.service';
 import { InjectCategoriesToTerryInterceptor } from 'src/interceptors/terry/inject-categories-to-terry.interceptor';
 import { InjectProfileToTerryInterceptor } from 'src/interceptors/terry/inject-profile-to-terry.interceptor';
+import { InjectRatingToTerryInterceptor } from 'src/interceptors/terry/inject-rating-to-terry.interceptor';
+import { FilterTerriesByRatingInterceptor } from 'src/interceptors/terry/filter-terries-by-rating.interceptor';
 
 @Controller('public/terry')
 @ApiTags('public.terry')
@@ -33,6 +35,8 @@ export class PublicTerryController {
   @UseInterceptors(
     InjectProfileToTerryInterceptor,
     InjectCategoriesToTerryInterceptor,
+    FilterTerriesByRatingInterceptor,
+    InjectRatingToTerryInterceptor,
     NormalizedGeoJsonPointInterceptor,
     PaginationInterceptor,
   )

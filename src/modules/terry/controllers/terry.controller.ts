@@ -29,6 +29,8 @@ import {
 } from 'src/decorators/pagination.decorator';
 import { InjectCategoriesToTerryInterceptor } from 'src/interceptors/terry/inject-categories-to-terry.interceptor';
 import { InjectProfileToTerryInterceptor } from 'src/interceptors/terry/inject-profile-to-terry.interceptor';
+import { InjectRatingToTerryInterceptor } from 'src/interceptors/terry/inject-rating-to-terry.interceptor';
+import { FilterTerriesByRatingInterceptor } from 'src/interceptors/terry/filter-terries-by-rating.interceptor';
 
 @Controller('builder/:profileId/terry')
 @ApiTags('builder.terry')
@@ -75,6 +77,8 @@ export class TerryController {
   @UseInterceptors(
     InjectProfileToTerryInterceptor,
     InjectCategoriesToTerryInterceptor,
+    FilterTerriesByRatingInterceptor,
+    InjectRatingToTerryInterceptor,
     NormalizedGeoJsonPointInterceptor,
     PaginationInterceptor,
   )

@@ -70,6 +70,12 @@ export class TerryFilterInputDto {
   @ValidateNested()
   @Type(() => MinMaxQueryDto)
   @IsOptional()
+  rate?: MinMaxQueryDto;
+
+  @ApiPropertyOptional({ type: MinMaxQueryDto })
+  @ValidateNested()
+  @Type(() => MinMaxQueryDto)
+  @IsOptional()
   terrain?: MinMaxQueryDto;
 
   @ApiPropertyOptional({ type: [String] })

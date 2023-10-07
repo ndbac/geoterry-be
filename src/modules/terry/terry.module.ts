@@ -10,6 +10,7 @@ import { TerrySearchHelper } from './providers/terry-search.helper';
 import { PublicTerryController } from './controllers/public-terry.controller';
 import { PublicTerryService } from './providers/public-terry.service';
 import { TerryCategoryCoreModule } from '../terry-category/terry-category.core.module';
+import { TerryUserMappingCoreModule } from '../terry-user-mapping/terry-user-mapping.core.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TerryCategoryCoreModule } from '../terry-category/terry-category.core.m
     CommonModule,
     ProfileCoreModule,
     TerryCategoryCoreModule,
+    TerryUserMappingCoreModule,
   ],
   providers: [TerryService, TerrySearchHelper, PublicTerryService],
   controllers: [TerryController, PublicTerryController],
