@@ -344,7 +344,7 @@ export class AccountService {
           !acc.credentials?.recoveryCode ||
           acc.credentials.recoveryCode !== input.code
         )
-          return throwStandardError(ErrorCode.INCORRECT_VEIRFY_CODE);
+          return throwStandardError(ErrorCode.INCORRECT_VERIFY_CODE);
         break;
       }
       default:

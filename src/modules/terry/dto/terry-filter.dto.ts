@@ -4,6 +4,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  Min,
   ValidateNested,
 } from 'class-validator';
 
@@ -35,34 +37,26 @@ export class TerryFilterInputDto {
   @IsOptional()
   textSearch?: string;
 
-  @ApiPropertyOptional({ type: [String] })
-  @IsString({ each: true })
+  @ApiPropertyOptional({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
   @IsOptional()
-  categoryIds?: string[];
+  size?: number;
 
-  @ApiPropertyOptional({ type: LocationDto })
-  @ValidateNested()
-  @Type(() => LocationDto)
+  @ApiPropertyOptional({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
   @IsOptional()
-  location?: LocationDto;
+  difficulty?: number;
 
-  @ApiPropertyOptional({ type: DistanceQueryDto })
-  @ValidateNested()
-  @Type(() => DistanceQueryDto)
+  @ApiPropertyOptional({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
   @IsOptional()
-  distance?: DistanceQueryDto;
-}
-
-export class PublicTerryFilterInputDto {
-  @ApiPropertyOptional({ type: String })
-  @IsString()
-  @IsOptional()
-  textSearch?: string;
-
-  @ApiPropertyOptional({ type: String })
-  @IsString()
-  @IsOptional()
-  terryId?: string;
+  terrain?: number;
 
   @ApiPropertyOptional({ type: [String] })
   @IsString({ each: true })

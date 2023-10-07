@@ -29,18 +29,21 @@ export class TerryMetadataDto {
   @IsNumber()
   @Min(1)
   @Max(5)
+  @IsOptional()
   size?: number;
 
   @ApiPropertyOptional({ type: Number })
   @IsNumber()
   @Min(1)
   @Max(5)
+  @IsOptional()
   difficulty?: number;
 
   @ApiPropertyOptional({ type: Number })
   @IsNumber()
   @Min(1)
   @Max(5)
+  @IsOptional()
   terrain?: number;
 }
 

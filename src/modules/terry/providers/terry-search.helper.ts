@@ -17,6 +17,9 @@ export class TerrySearchHelper {
       location,
       distance,
       categoryIds,
+      size,
+      difficulty,
+      terrain,
     }: TerryFilterInputDto & { profileId?: string },
     pagination: IPagination,
   ) {
@@ -33,6 +36,9 @@ export class TerrySearchHelper {
               ...(!_.isEmpty(categoryIds)
                 ? [{ categoryIds: { $in: categoryIds } }]
                 : []),
+              ...(size ? [{ 'metadata.size': size }] : []),
+              ...(difficulty ? [{ 'metadata.difficulty': difficulty }] : []),
+              ...(terrain ? [{ 'metadata.terrain': terrain }] : []),
             ],
           },
         },
@@ -54,6 +60,9 @@ export class TerrySearchHelper {
               ...commonFilter,
               ...textSearchOption,
               ...(categoryIds ? { categoryIds: { $in: categoryIds } } : []),
+              ...(size ? { 'metadata.size': size } : []),
+              ...(difficulty ? { 'metadata.difficulty': difficulty } : []),
+              ...(terrain ? { 'metadata.terrain': terrain } : []),
             },
             distanceField: 'distance',
           },
