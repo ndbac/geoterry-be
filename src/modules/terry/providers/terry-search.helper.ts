@@ -36,9 +36,36 @@ export class TerrySearchHelper {
               ...(!_.isEmpty(categoryIds)
                 ? [{ categoryIds: { $in: categoryIds } }]
                 : []),
-              ...(size ? [{ 'metadata.size': size }] : []),
-              ...(difficulty ? [{ 'metadata.difficulty': difficulty }] : []),
-              ...(terrain ? [{ 'metadata.terrain': terrain }] : []),
+              ...(!_.isEmpty(size)
+                ? [
+                    {
+                      $and: [
+                        { 'metadata.size': { $gte: size.min } },
+                        { 'metadata.size': { $lte: size.max } },
+                      ],
+                    },
+                  ]
+                : []),
+              ...(!_.isEmpty(difficulty)
+                ? [
+                    {
+                      $and: [
+                        { 'metadata.difficulty': { $gte: difficulty.min } },
+                        { 'metadata.difficulty': { $lte: difficulty.max } },
+                      ],
+                    },
+                  ]
+                : []),
+              ...(!_.isEmpty(terrain)
+                ? [
+                    {
+                      $and: [
+                        { 'metadata.terrain': { $gte: terrain.min } },
+                        { 'metadata.terrain': { $lte: terrain.max } },
+                      ],
+                    },
+                  ]
+                : []),
             ],
           },
         },
@@ -60,9 +87,30 @@ export class TerrySearchHelper {
               ...commonFilter,
               ...textSearchOption,
               ...(categoryIds ? { categoryIds: { $in: categoryIds } } : []),
-              ...(size ? { 'metadata.size': size } : []),
-              ...(difficulty ? { 'metadata.difficulty': difficulty } : []),
-              ...(terrain ? { 'metadata.terrain': terrain } : []),
+              ...(!_.isEmpty(size)
+                ? {
+                    $and: [
+                      { 'metadata.size': { $gte: size.min } },
+                      { 'metadata.size': { $lte: size.max } },
+                    ],
+                  }
+                : []),
+              ...(!_.isEmpty(difficulty)
+                ? {
+                    $and: [
+                      { 'metadata.difficulty': { $gte: difficulty.min } },
+                      { 'metadata.difficulty': { $lte: difficulty.max } },
+                    ],
+                  }
+                : []),
+              ...(!_.isEmpty(terrain)
+                ? {
+                    $and: [
+                      { 'metadata.terrain': { $gte: terrain.min } },
+                      { 'metadata.terrain': { $lte: terrain.max } },
+                    ],
+                  }
+                : []),
             },
             distanceField: 'distance',
           },

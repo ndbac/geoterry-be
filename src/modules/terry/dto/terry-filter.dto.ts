@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -31,32 +32,45 @@ export class DistanceQueryDto {
   min?: number;
 }
 
+export class MinMaxQueryDto {
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  @IsNotEmpty()
+  max: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  @IsNotEmpty()
+  min: number;
+}
+
 export class TerryFilterInputDto {
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsOptional()
   textSearch?: string;
 
-  @ApiPropertyOptional({ type: Number })
-  @IsNumber()
-  @Min(1)
-  @Max(5)
+  @ApiPropertyOptional({ type: MinMaxQueryDto })
+  @ValidateNested()
+  @Type(() => MinMaxQueryDto)
   @IsOptional()
-  size?: number;
+  size?: MinMaxQueryDto;
 
-  @ApiPropertyOptional({ type: Number })
-  @IsNumber()
-  @Min(1)
-  @Max(5)
+  @ApiPropertyOptional({ type: MinMaxQueryDto })
+  @ValidateNested()
+  @Type(() => MinMaxQueryDto)
   @IsOptional()
-  difficulty?: number;
+  difficulty?: MinMaxQueryDto;
 
-  @ApiPropertyOptional({ type: Number })
-  @IsNumber()
-  @Min(1)
-  @Max(5)
+  @ApiPropertyOptional({ type: MinMaxQueryDto })
+  @ValidateNested()
+  @Type(() => MinMaxQueryDto)
   @IsOptional()
-  terrain?: number;
+  terrain?: MinMaxQueryDto;
 
   @ApiPropertyOptional({ type: [String] })
   @IsString({ each: true })
