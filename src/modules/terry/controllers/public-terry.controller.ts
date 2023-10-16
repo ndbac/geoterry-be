@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
@@ -57,7 +58,11 @@ export class PublicTerryController {
     NormalizedGeoJsonPointInterceptor,
   )
   @Get(':id')
-  getTerry(@Param('id') terryId: string) {
-    return this.terryService.getTerryById(terryId);
+  getTerry(
+    @Param('id') terryId: string,
+    @Query('latitude') latitude?: number,
+    @Query('longitude') longitude?: number,
+  ) {
+    return this.terryService.getTerryById(terryId, latitude, longitude);
   }
 }

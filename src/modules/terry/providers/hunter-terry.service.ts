@@ -4,6 +4,7 @@ import { TerryFilterInputDto } from '../dto/terry-filter.dto';
 import { IPagination } from 'src/shared/types';
 import { TerrySearchHelper } from './terry-search.helper';
 import { getPaginationHeaders } from 'src/shared/pagination.helpers';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class HunterTerryService {
@@ -12,7 +13,29 @@ export class HunterTerryService {
     private readonly terrySearchHelper: TerrySearchHelper,
   ) {}
 
-  async getTerryById(terryId: string) {
+  async getTerryById(terryId: string, latitude?: number, longitude?: number) {
+    if (latitude && longitude) {
+      const res = await this.terryRepo.aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: 'Point',
+              coordinates: [longitude, latitude],
+            },
+            spherical: true,
+            query: {
+              _id: new mongoose.Types.ObjectId(terryId),
+            },
+            distanceField: 'distance',
+          },
+        },
+        ...this.terrySearchHelper.normalizedMongoDbRecords(),
+      ]);
+      if (!res[0]) {
+        return this.terryRepo.throwErrorNotFound();
+      }
+      return res[0];
+    }
     return this.terryRepo.findOneOrFail({ _id: terryId });
   }
 

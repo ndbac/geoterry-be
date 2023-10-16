@@ -166,6 +166,23 @@ export const TERRY_ENDPOINT_CONFIG: Record<
         type: Boolean,
         required: false,
       },
+      {
+        name: 'latitude',
+        type: Number,
+        required: false,
+      },
+      {
+        name: 'longitude',
+        type: Number,
+        required: false,
+      },
+    ],
+    params: [
+      {
+        name: 'profileId',
+        type: String,
+        required: true,
+      },
     ],
     responses: [
       {
@@ -211,6 +228,16 @@ export const TERRY_ENDPOINT_CONFIG: Record<
       {
         name: 'includeProfileData',
         type: Boolean,
+        required: false,
+      },
+      {
+        name: 'latitude',
+        type: Number,
+        required: false,
+      },
+      {
+        name: 'longitude',
+        type: Number,
         required: false,
       },
     ],

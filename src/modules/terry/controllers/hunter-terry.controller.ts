@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -80,7 +81,11 @@ export class HunterTerryController {
     NormalizedGeoJsonPointInterceptor,
   )
   @Get(':id')
-  getTerry(@Param('id') terryId: string) {
-    return this.hunterTerryService.getTerryById(terryId);
+  getTerry(
+    @Param('id') terryId: string,
+    @Query('latitude') latitude?: number,
+    @Query('longitude') longitude?: number,
+  ) {
+    return this.hunterTerryService.getTerryById(terryId, latitude, longitude);
   }
 }

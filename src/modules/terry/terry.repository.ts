@@ -1,5 +1,9 @@
 import { TerryDocument } from './terry.model';
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BaseRepository } from 'src/shared/mongoose/base.repository';
@@ -15,6 +19,13 @@ export class TerryRepository
     model: Model<TerryDocument>,
   ) {
     super(model);
+  }
+
+  throwErrorNotFound(): never {
+    throw new NotFoundException({
+      sentryAlertDisabled: true,
+      message: 'Not found',
+    });
   }
 
   async onApplicationBootstrap() {
