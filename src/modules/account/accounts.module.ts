@@ -24,9 +24,15 @@ import { UserMiddleware } from 'src/middlewares/user.middleware';
 })
 export class AccountModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(UserMiddleware).forRoutes({
-      path: `/auth/update-credentials`,
-      method: RequestMethod.PUT,
-    });
+    consumer.apply(UserMiddleware).forRoutes(
+      {
+        path: `/auth/update-credentials`,
+        method: RequestMethod.PUT,
+      },
+      {
+        path: `/auth/tear-down`,
+        method: RequestMethod.DELETE,
+      },
+    );
   }
 }

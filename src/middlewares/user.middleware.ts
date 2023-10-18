@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { isAfter } from 'date-fns';
+import { isAfter, sub } from 'date-fns';
 import { Request, Response, NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { AccountRepository } from 'src/modules/account/accounts.repository';
@@ -23,7 +23,7 @@ export class UserMiddleware implements NestMiddleware {
       if (
         isAfter(
           (tokenData.iat || 0) * 1000,
-          account.credentials.passwordChangedAt,
+          sub(account.credentials.passwordChangedAt, { minutes: 1 }),
         )
       ) {
         req['user'] = {

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Post,
   Put,
   UseFilters,
@@ -90,5 +91,13 @@ export class AccountController {
   @Put('/refresh')
   async refreshToken(@Body() data: AccountRefreshToken) {
     return this.accountService.refreshToken(data);
+  }
+
+  @EndpointConfig(ACCOUNT_ENDPOINT_CONFIG[EAccountOperation.TEAR_DOWN_ACCOUNT])
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @Delete('/tear-down')
+  async teardown(@User('userId') userId: string) {
+    return this.accountService.teardown(userId);
   }
 }

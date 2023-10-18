@@ -24,6 +24,7 @@ export enum EAccountOperation {
   ACCOUNT_RECOVER = 'accountRecover',
   ACCOUNT_UPDATE_CREDENTIALS = 'accountUpdateCredentials',
   VERIFY_ACCOUNT_RECOVERY_OTP = 'verifyAccountRecoveryOTP',
+  TEAR_DOWN_ACCOUNT = 'teardownAccount',
 }
 
 export const ACCOUNT_ENDPOINT_CONFIG: Record<
@@ -116,6 +117,15 @@ export const ACCOUNT_ENDPOINT_CONFIG: Record<
     responses: [
       {
         type: VerifyAccountRecoverOTPResDto,
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [EAccountOperation.TEAR_DOWN_ACCOUNT]: {
+    operationId: EAccountOperation.TEAR_DOWN_ACCOUNT,
+    summary: 'Tear down account',
+    responses: [
+      {
         status: HttpStatus.OK,
       },
     ],

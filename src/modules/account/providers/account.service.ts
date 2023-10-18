@@ -262,6 +262,10 @@ export class AccountService {
     return throwStandardError(ErrorCode.INCORRECT_PASSWORD);
   }
 
+  async teardown(userId: string) {
+    await this.accountRepo.deleteById(userId);
+  }
+
   private async isEligibleForCreateAccount(input: CreateAccountDto) {
     // not allow to create admin account
     if (input.namespace === IamNamespace.GEOTERRY_ADMINS) {
