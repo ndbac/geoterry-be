@@ -83,9 +83,19 @@ export class HunterTerryController {
   @Get(':id')
   getTerry(
     @Param('id') terryId: string,
+    @Param('profileId') profileId: string,
     @Query('latitude') latitude?: number,
     @Query('longitude') longitude?: number,
+    @Query('markAsSaved') markAsSaved?: boolean,
+    @Query('markAsFavourited') markAsFavourited?: boolean,
   ) {
-    return this.hunterTerryService.getTerryById(terryId, latitude, longitude);
+    return this.hunterTerryService.getTerryById(
+      terryId,
+      profileId,
+      latitude,
+      longitude,
+      markAsSaved,
+      markAsFavourited,
+    );
   }
 }

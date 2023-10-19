@@ -176,6 +176,16 @@ export const TERRY_ENDPOINT_CONFIG: Record<
         type: Number,
         required: false,
       },
+      {
+        name: 'markAsSaved',
+        type: Boolean,
+        required: false,
+      },
+      {
+        name: 'markAsFavourited',
+        type: Boolean,
+        required: false,
+      },
     ],
     params: [
       {
