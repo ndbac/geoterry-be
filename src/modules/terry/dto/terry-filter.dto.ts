@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -9,6 +10,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
+import _ from 'lodash';
 
 export class LocationDto {
   @ApiProperty({ type: Number })
@@ -94,4 +96,24 @@ export class TerryFilterInputDto {
   @Type(() => DistanceQueryDto)
   @IsOptional()
   distance?: DistanceQueryDto;
+}
+
+export class GetTerryByIdQuery {
+  @ApiPropertyOptional({ type: Boolean })
+  @Transform(({ value }) => {
+    if (_.isNil(value)) return undefined;
+    return value === 'true';
+  })
+  @IsBoolean()
+  @IsOptional()
+  markAsFavourited?: boolean;
+
+  @ApiPropertyOptional({ type: Boolean })
+  @Transform(({ value }) => {
+    if (_.isNil(value)) return undefined;
+    return value === 'true';
+  })
+  @IsBoolean()
+  @IsOptional()
+  markAsSaved?: boolean;
 }

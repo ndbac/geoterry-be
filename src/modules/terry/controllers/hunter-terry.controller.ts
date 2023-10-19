@@ -17,7 +17,10 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { IPagination, IamNamespace } from 'src/shared/types';
 import { ProfileAccessGuard } from 'src/guards/store-access.guard';
 import { ETerryOperation, TERRY_ENDPOINT_CONFIG } from './endpoint-config';
-import { TerryFilterInputDto } from '../dto/terry-filter.dto';
+import {
+  GetTerryByIdQuery,
+  TerryFilterInputDto,
+} from '../dto/terry-filter.dto';
 import { NormalizedGeoJsonPointInterceptor } from 'src/interceptors/terry/normalized-geo-json-point.interceptor';
 import { PaginationInterceptor } from 'src/interceptors/pagination.interceptor';
 import {
@@ -86,16 +89,14 @@ export class HunterTerryController {
     @Param('profileId') profileId: string,
     @Query('latitude') latitude?: number,
     @Query('longitude') longitude?: number,
-    @Query('markAsSaved') markAsSaved?: boolean,
-    @Query('markAsFavourited') markAsFavourited?: boolean,
+    @Query() query?: GetTerryByIdQuery,
   ) {
     return this.hunterTerryService.getTerryById(
       terryId,
       profileId,
+      query,
       latitude,
       longitude,
-      markAsSaved,
-      markAsFavourited,
     );
   }
 }

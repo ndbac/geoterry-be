@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { TerryRepository } from '../terry.repository';
-import { TerryFilterInputDto } from '../dto/terry-filter.dto';
+import {
+  GetTerryByIdQuery,
+  TerryFilterInputDto,
+} from '../dto/terry-filter.dto';
 import { IPagination } from 'src/shared/types';
 import { TerrySearchHelper } from './terry-search.helper';
 import { getPaginationHeaders } from 'src/shared/pagination.helpers';
@@ -19,10 +22,9 @@ export class HunterTerryService {
   async getTerryById(
     terryId: string,
     profileId: string,
+    payload?: GetTerryByIdQuery,
     latitude?: number,
     longitude?: number,
-    markAsSaved?: boolean,
-    markAsFavourited?: boolean,
   ) {
     if (latitude && longitude) {
       const res = await this.terryRepo.aggregate([
@@ -44,16 +46,10 @@ export class HunterTerryService {
       if (!res[0]) {
         return this.terryRepo.throwErrorNotFound();
       }
-      await this.updateTerryCustomData(terryId, profileId, {
-        markAsSaved,
-        markAsFavourited,
-      });
+      await this.updateTerryCustomData(terryId, profileId, payload);
       return res[0];
     }
-    await this.updateTerryCustomData(terryId, profileId, {
-      markAsSaved,
-      markAsFavourited,
-    });
+    await this.updateTerryCustomData(terryId, profileId, payload);
     return this.terryRepo.findOneOrFail({ _id: terryId });
   }
 
@@ -85,12 +81,9 @@ export class HunterTerryService {
   private updateTerryCustomData = async (
     terryId: string,
     profileId: string,
-    payload: {
-      markAsSaved?: boolean;
-      markAsFavourited?: boolean;
-    },
+    query?: GetTerryByIdQuery,
   ) => {
-    if (!_.isEmpty(payload)) {
+    if (!_.isEmpty(query)) {
       await this.terryUserMappingRepo.updateOneOrCreate(
         {
           terryId,
@@ -99,8 +92,8 @@ export class HunterTerryService {
         {
           terryId,
           profileId,
-          favourite: payload.markAsFavourited,
-          saved: payload.markAsSaved,
+          favourite: query.markAsFavourited,
+          saved: query.markAsSaved,
         },
       );
     }
