@@ -58,6 +58,7 @@ export class InjectRatingToTerryInterceptor implements NestInterceptor {
       (accumulator, current) => accumulator + (current?.rate || 0),
       0,
     );
+    if (totalRating === 0) return 5;
     return totalRating / terryUserMappingData.length;
   }
 
