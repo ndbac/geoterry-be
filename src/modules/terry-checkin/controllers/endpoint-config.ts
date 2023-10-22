@@ -81,6 +81,13 @@ export const TERRY_CHECKIN_ENDPOINT_CONFIG: Record<
   [ETerryCheckinOperation.PUBLIC_GET_CHECKINS_OF_TERRY]: {
     operationId: ETerryCheckinOperation.PUBLIC_GET_CHECKINS_OF_TERRY,
     summary: 'Public get checkins of terry',
+    query: [
+      {
+        name: 'includeProfileData',
+        type: Boolean,
+        required: false,
+      },
+    ],
     responses: [
       {
         type: [TerryCheckinResDto],

@@ -20,7 +20,7 @@ export class ProfileInputTransformerPipe implements PipeTransform {
   }: UserCreateProfileInputWithUserContextDto) {
     await this.isEligibleToCreateProfile(user);
 
-    const slug = slugify(data.displayName) || Date.now();
+    const slug = slugify(data.displayName, { lower: true }) || Date.now();
     const isExistedSlug = await this.profileRepo.exists({ slug });
     return {
       user,

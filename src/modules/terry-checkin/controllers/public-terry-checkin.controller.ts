@@ -19,6 +19,7 @@ import {
 } from 'src/decorators/pagination.decorator';
 import { PaginationInterceptor } from 'src/interceptors/pagination.interceptor';
 import { PublicTerryCheckinService } from '../providers/public-terry-checkin.service';
+import { InjectProfileToTerryCheckinInterceptor } from 'src/interceptors/terry-checkin/inject-profile-to-terry-checkin.interceptor';
 
 @Controller('public/terry-checkin')
 @ApiTags('public.terryCheckin')
@@ -33,7 +34,10 @@ export class PublicTerryCheckinController {
       ETerryCheckinOperation.PUBLIC_GET_CHECKINS_OF_TERRY
     ],
   )
-  @UseInterceptors(PaginationInterceptor)
+  @UseInterceptors(
+    InjectProfileToTerryCheckinInterceptor,
+    PaginationInterceptor,
+  )
   @PaginationSwaggerQuery()
   @Get(':terryId')
   async filter(
