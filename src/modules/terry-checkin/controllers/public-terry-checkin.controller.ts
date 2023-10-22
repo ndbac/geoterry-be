@@ -39,7 +39,7 @@ export class PublicTerryCheckinController {
     PaginationInterceptor,
   )
   @PaginationSwaggerQuery()
-  @Get(':terryId')
+  @Get('terry/:terryId')
   async filter(
     @Param('terryId') terryId: string,
     @Pagination() pagination: IPagination,
