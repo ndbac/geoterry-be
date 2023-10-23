@@ -32,6 +32,7 @@ import {
   PaginationSwaggerQuery,
 } from 'src/decorators/pagination.decorator';
 import { PaginationInterceptor } from 'src/interceptors/pagination.interceptor';
+import { InjectTerryToTerryCheckinInterceptor } from 'src/interceptors/terry-checkin/inject-terry-data-to-terry-checkin.interceptor';
 
 @Controller('hunter/:profileId/terry-checkin')
 @ApiTags('hunter.terryCheckin')
@@ -71,7 +72,7 @@ export class TerryCheckinController {
       IamNamespace.GEOTERRY_BUILDERS,
     ],
   })
-  @UseInterceptors(PaginationInterceptor)
+  @UseInterceptors(InjectTerryToTerryCheckinInterceptor, PaginationInterceptor)
   @PaginationSwaggerQuery()
   @Post('filter')
   async filter(

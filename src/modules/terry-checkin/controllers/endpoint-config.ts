@@ -71,6 +71,13 @@ export const TERRY_CHECKIN_ENDPOINT_CONFIG: Record<
     body: {
       type: FilterTerryCheckinDto,
     },
+    query: [
+      {
+        name: 'includeTerryData',
+        type: Boolean,
+        required: false,
+      },
+    ],
     responses: [
       {
         type: [TerryCheckinResDto],
@@ -84,6 +91,11 @@ export const TERRY_CHECKIN_ENDPOINT_CONFIG: Record<
     query: [
       {
         name: 'includeProfileData',
+        type: Boolean,
+        required: false,
+      },
+      {
+        name: 'includeTerryData',
         type: Boolean,
         required: false,
       },

@@ -54,6 +54,54 @@ export class TerryCheckinInputDto {
   location: HunterLocationDto;
 }
 
+export class ProfileDto {
+  @ApiProperty({ type: String })
+  id: string;
+
+  @ApiProperty({ type: String })
+  displayName: string;
+
+  @ApiPropertyOptional({ type: String })
+  logoUrl?: string;
+}
+
+export class TerryMetadataResDto {
+  @ApiPropertyOptional({ type: Number })
+  size?: number;
+
+  @ApiPropertyOptional({ type: Number })
+  difficulty?: number;
+
+  @ApiPropertyOptional({ type: Number })
+  terrain?: number;
+}
+
+export class TerryLocationResDto {
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @IsNotEmpty()
+  latitude: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @IsNotEmpty()
+  longitude: number;
+}
+
+export class TerryDto {
+  @ApiProperty({ type: String })
+  id: string;
+
+  @ApiProperty({ type: String })
+  name: string;
+
+  @ApiPropertyOptional({ type: TerryMetadataResDto })
+  metadata?: TerryMetadataResDto;
+
+  @ApiProperty({ type: TerryLocationResDto })
+  location: TerryLocationResDto;
+}
+
 export class TerryCheckinResDto extends BaseDbResponseDto {
   @ApiProperty({ type: String })
   terryId: string;
@@ -72,6 +120,12 @@ export class TerryCheckinResDto extends BaseDbResponseDto {
 
   @ApiProperty({ type: HunterLocationDto })
   location: HunterLocationDto;
+
+  @ApiPropertyOptional({ type: ProfileDto })
+  profile?: ProfileDto;
+
+  @ApiPropertyOptional({ type: TerryDto })
+  terry?: TerryDto;
 }
 
 export class UpdateTerryCheckinInputDto {
