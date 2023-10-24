@@ -13,6 +13,7 @@ import { WebsocketModule } from './adapters/websocket/websocket.module';
 import { ConversationModule } from './conversations/conversations.module';
 import { MessageModule } from './messages/messages.module';
 import { TerryUserMappingModule } from './terry-user-mapping/terry-user-mapping.module';
+import { TerryUserPathModule } from './terry-user-path/terry-user-path.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TerryUserMappingModule } from './terry-user-mapping/terry-user-mapping.
     ConversationModule,
     MessageModule,
     TerryUserMappingModule,
+    TerryUserPathModule,
   ],
 })
 export class AppModule {}

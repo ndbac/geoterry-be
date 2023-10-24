@@ -1,19 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { TerryUserMappingRepository } from '../terry-user-mapping.repository';
-import { UpsertTerryUserMappingInputDto } from '../dto/terry-user-mapping.dto';
+import { TerryUserPathRepository } from '../terry-user-path.repository';
 import { TerryRepository } from 'src/modules/terry/terry.repository';
 import { throwStandardError } from 'src/errors/helpers';
 import { ErrorCode } from 'src/errors/error-defs';
+import { TerryUserPathInputDto } from '../dto/terry-user-path.dto';
 
 @Injectable()
-export class TerryUserMappingService {
+export class TerryUserPathService {
   constructor(
-    private readonly terryUserMappingRepo: TerryUserMappingRepository,
+    private readonly terryUserPathRepo: TerryUserPathRepository,
     private readonly terryRepo: TerryRepository,
   ) {}
 
+  async get(profileId: string, terryId: string) {
+    return this.terryUserPathRepo.findOneOrFail({ profileId, terryId });
+  }
+
   async upsert(
-    data: UpsertTerryUserMappingInputDto,
+    data: TerryUserPathInputDto,
     profileId: string,
     terryId: string,
   ) {
@@ -21,11 +25,10 @@ export class TerryUserMappingService {
     if (!terry.isAvailable) {
       return throwStandardError(ErrorCode.INVALID_TERRY);
     }
-    return this.terryUserMappingRepo.updateOneOrCreate(
+    return this.terryUserPathRepo.updateOneOrCreate(
       { profileId, terryId },
       {
-        ...(data.saved ? { saved: data.saved } : []),
-        ...(data.favourite ? { favourite: data.favourite } : []),
+        ...(data.coordinates ? { coordinates: data.coordinates } : []),
       },
     );
   }

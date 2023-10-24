@@ -19,6 +19,7 @@ export enum CollectionName {
   CONVERSATIONS = 'conversations',
   MESSAGES = 'messages',
   TERRY_USER_MAPPINGS = 'terry-user-mappings',
+  TERRY_USER_PATHS = 'terry-user-paths',
 }
 
 export type PossiblyAsync<T> = T | Promise<T>;
