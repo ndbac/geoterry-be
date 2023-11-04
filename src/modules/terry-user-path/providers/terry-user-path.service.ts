@@ -28,7 +28,9 @@ export class TerryUserPathService {
     return this.terryUserPathRepo.updateOneOrCreate(
       { profileId, terryId },
       {
-        ...(data.coordinates ? { coordinates: data.coordinates } : []),
+        profileId,
+        terryId,
+        ...(data.path ? { path: data.path } : []),
       },
     );
   }

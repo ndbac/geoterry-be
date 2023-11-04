@@ -1,39 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  ValidateNested,
-} from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
 
-export class CoordinateInputDto {
-  @ApiProperty({ type: Number })
-  @IsNumber()
-  @IsNotEmpty()
-  latitude: number;
-
-  @ApiProperty({ type: Number })
-  @IsNumber()
-  @IsNotEmpty()
-  longitude: number;
-}
-
 export class TerryUserPathInputDto {
-  @ApiPropertyOptional({ type: [CoordinateInputDto] })
-  @Type(() => CoordinateInputDto)
-  @ValidateNested()
+  @ApiPropertyOptional({ type: String })
+  @IsString()
   @IsOptional()
-  coordinates?: CoordinateResDto[];
-}
-
-export class CoordinateResDto {
-  @ApiProperty({ type: Number })
-  latitude: number;
-
-  @ApiProperty({ type: Number })
-  longitude: number;
+  path?: string;
 }
 
 export class TerryUserPathResDto extends BaseDbResponseDto {
@@ -43,6 +16,6 @@ export class TerryUserPathResDto extends BaseDbResponseDto {
   @ApiProperty({ type: String })
   profileId: string;
 
-  @ApiPropertyOptional({ type: [CoordinateResDto] })
-  coordinates?: CoordinateResDto[];
+  @ApiPropertyOptional({ type: String })
+  path?: string;
 }
