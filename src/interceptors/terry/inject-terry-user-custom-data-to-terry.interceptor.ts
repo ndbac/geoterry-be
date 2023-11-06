@@ -50,10 +50,7 @@ export class InjectTerryUserCustomDataInterceptor implements NestInterceptor {
         this.addData(terry, terryUserMappingDataMappedByTerryId[terry.id]);
       });
     } else {
-      (data as any).rate = this.addData(
-        data,
-        terryUserMappingDataMappedByTerryId[data.id],
-      );
+      this.addData(data, terryUserMappingDataMappedByTerryId[data.id]);
     }
     return data;
   }
