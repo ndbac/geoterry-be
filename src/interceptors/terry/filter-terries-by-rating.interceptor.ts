@@ -24,8 +24,8 @@ export class FilterTerriesByRatingInterceptor implements NestInterceptor {
         if (_.isArray(resBody)) {
           return resBody.filter(
             (terry) =>
-              (terry as any).rate <= expectedRating.max &&
-              (terry as any).rate >= expectedRating.min,
+              (terry as any).rating?.rate <= expectedRating.max &&
+              (terry as any).rating?.rate >= expectedRating.min,
           );
         }
         return resBody;

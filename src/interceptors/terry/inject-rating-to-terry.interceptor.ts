@@ -40,12 +40,12 @@ export class InjectRatingToTerryInterceptor implements NestInterceptor {
       );
     if (Array.isArray(data)) {
       data.forEach((terry) => {
-        (terry as any).rate = this.addRatingToTerry(
+        (terry as any).rating = this.addRatingToTerry(
           terryUserMappingDataMappedByTerryId[terry.id] || [],
         );
       });
     } else {
-      (data as any).rate = this.addRatingToTerry(
+      (data as any).rating = this.addRatingToTerry(
         terryUserMappingDataMappedByTerryId[data.id] || [],
       );
     }
@@ -53,13 +53,20 @@ export class InjectRatingToTerryInterceptor implements NestInterceptor {
   }
 
   addRatingToTerry(terryUserMappingData: TerryUserMappingDocument[]) {
-    if (_.isEmpty(terryUserMappingData)) return 5;
+    if (_.isEmpty(terryUserMappingData))
+      return {
+        rate: 5,
+        total: 0,
+      };
     const totalRating = terryUserMappingData.reduce(
       (accumulator, current) => accumulator + (current?.rate || 0),
       0,
     );
     if (totalRating === 0) return 5;
-    return totalRating / terryUserMappingData.length;
+    return {
+      rate: totalRating / terryUserMappingData.length,
+      total: terryUserMappingData.length,
+    };
   }
 
   async getTerryUserMappingMappedByTerryId(

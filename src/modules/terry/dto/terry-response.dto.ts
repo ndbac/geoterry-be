@@ -26,7 +26,7 @@ export class TerryMetadataResDto {
   terrain?: number;
 }
 
-export class ProfileDto {
+export class ProfileResDto {
   @ApiProperty({ type: String })
   id: string;
 
@@ -35,6 +35,14 @@ export class ProfileDto {
 
   @ApiPropertyOptional({ type: String })
   logoUrl?: string;
+}
+
+export class RatingResDto {
+  @ApiProperty({ type: Number })
+  rate: number;
+
+  @ApiProperty({ type: Number })
+  total: number;
 }
 
 export class TerryResponseDto extends BaseDbResponseDto {
@@ -65,8 +73,8 @@ export class TerryResponseDto extends BaseDbResponseDto {
   @ApiPropertyOptional({ type: TerryMetadataResDto })
   metadata?: TerryMetadataResDto;
 
-  @ApiPropertyOptional({ type: ProfileDto })
-  profile?: ProfileDto;
+  @ApiPropertyOptional({ type: ProfileResDto })
+  profile?: ProfileResDto;
 
   @ApiPropertyOptional({ type: [TerryCategoryResDto] })
   categories?: TerryCategoryResDto[];
@@ -74,8 +82,8 @@ export class TerryResponseDto extends BaseDbResponseDto {
   @ApiPropertyOptional({ type: Number, description: 'Distance in meters' })
   distance?: number;
 
-  @ApiProperty({ type: Number })
-  rate: number;
+  @ApiProperty({ type: RatingResDto })
+  rating: RatingResDto;
 
   @ApiPropertyOptional({ type: Boolean })
   favourite?: boolean;
