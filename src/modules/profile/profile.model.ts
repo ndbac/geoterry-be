@@ -28,4 +28,7 @@ export class ProfileDocument extends BaseDocument {
 
   @Prop({ default: LanguageCode.ENGLISH, enum: LanguageCode })
   languageCode: LanguageCode;
+
+  @Prop({ default: 0, required: true })
+  rewardPoints: number;
 }

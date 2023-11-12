@@ -26,4 +26,7 @@ export class ProfileResDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ type: String, enum: LanguageCode })
   languageCode: LanguageCode;
+
+  @ApiPropertyOptional({ type: Number })
+  rewardPoints: number;
 }

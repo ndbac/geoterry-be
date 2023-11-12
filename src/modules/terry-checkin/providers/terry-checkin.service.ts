@@ -15,6 +15,7 @@ import { IPagination } from 'src/shared/types';
 import { getPaginationHeaders } from 'src/shared/pagination.helpers';
 import { TerryUserMappingRepository } from 'src/modules/terry-user-mapping/terry-user-mapping.repository';
 import { ClientSession } from 'mongoose';
+import { ProfileRepository } from 'src/modules/profile/profile.repository';
 
 @Injectable()
 export class TerryCheckinService {
@@ -22,12 +23,15 @@ export class TerryCheckinService {
     private readonly terryCheckinRepo: TerryCheckinRepository,
     private readonly terryRepo: TerryRepository,
     private readonly terryUserMappingRepo: TerryUserMappingRepository,
+    private readonly profileRepo: ProfileRepository,
   ) {}
 
   async checkin(data: TerryCheckinInputDto, profileId: string) {
     return this.terryRepo.withTransaction(async (session) => {
-      const terry = await this.terryRepo.findByIdOrFail(data.terryId);
-      if (!terry.isAvailable || terry.profileId === profileId) {
+      const terry = await this.terryRepo.findByIdOrFail(data.terryId, {
+        session,
+      });
+      if (!terry.isAvailable) {
         return throwStandardError(ErrorCode.INVALID_TERRY);
       }
       const maxDistance = config.get<number>('terry.maxDistanceToCheckin');
@@ -39,13 +43,21 @@ export class TerryCheckinService {
         return throwStandardError(ErrorCode.OUT_OF_DISTANCE);
       }
       if (data.rate) {
-        await this.updateTerryUserMappingRating(
+        await this.updateTerryUserMapping(
           data.rate,
           terry.id,
           profileId,
           session,
         );
       }
+      await this.profileRepo.updateById(profileId, {
+        $inc: {
+          rewardPoints:
+            (terry.metadata?.size || 0) +
+            (terry.metadata?.terrain || 0) +
+            (terry.metadata?.difficulty || 0),
+        },
+      });
       return this.terryCheckinRepo.create({ profileId, ...data }, { session });
     });
   }
@@ -63,7 +75,7 @@ export class TerryCheckinService {
         },
       );
       if (data.rate) {
-        await this.updateTerryUserMappingRating(
+        await this.updateTerryUserMapping(
           data.rate,
           checkinRecord.terryId,
           profileId,
@@ -107,7 +119,7 @@ export class TerryCheckinService {
     };
   }
 
-  private async updateTerryUserMappingRating(
+  private async updateTerryUserMapping(
     rate: number,
     terryId: string,
     profileId: string,
