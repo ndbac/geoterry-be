@@ -120,6 +120,7 @@ export class TerryCheckinController {
       IamNamespace.GEOTERRY_BUILDERS,
     ],
   })
+  @UseInterceptors(InjectTerryToTerryCheckinInterceptor)
   @Get(':id')
   async get(
     @Param('profileId') profileId: string,

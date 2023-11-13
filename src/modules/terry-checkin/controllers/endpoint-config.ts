@@ -49,6 +49,13 @@ export const TERRY_CHECKIN_ENDPOINT_CONFIG: Record<
   [ETerryCheckinOperation.HUNTER_GET_TERRY_CHECKIN]: {
     operationId: ETerryCheckinOperation.HUNTER_GET_TERRY_CHECKIN,
     summary: 'Hunter get terry checkin',
+    query: [
+      {
+        name: 'includeTerryData',
+        type: Boolean,
+        required: false,
+      },
+    ],
     responses: [
       {
         type: TerryCheckinResDto,
