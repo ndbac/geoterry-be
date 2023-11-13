@@ -9,13 +9,17 @@ import { throwStandardError } from 'src/errors/helpers';
 import { ErrorCode } from 'src/errors/error-defs';
 import config from 'config';
 import haversine from 'haversine-distance';
-import { FilterTerryCheckinDto } from '../dto/terry-filter.dto';
+import {
+  FilterTerryCheckinDto,
+  ReadTerryCheckinQueryDto,
+} from '../dto/terry-filter.dto';
 import _ from 'lodash';
 import { IPagination } from 'src/shared/types';
 import { getPaginationHeaders } from 'src/shared/pagination.helpers';
 import { TerryUserMappingRepository } from 'src/modules/terry-user-mapping/terry-user-mapping.repository';
 import { ClientSession } from 'mongoose';
 import { ProfileRepository } from 'src/modules/profile/profile.repository';
+import { ETerryCheckedInFindAspects } from '../types';
 
 @Injectable()
 export class TerryCheckinService {
@@ -90,7 +94,17 @@ export class TerryCheckinService {
     });
   }
 
-  async get(checkinId: string, profileId: string) {
+  async get(
+    checkinId: string,
+    profileId: string,
+    query: ReadTerryCheckinQueryDto,
+  ) {
+    if (query.findBy === ETerryCheckedInFindAspects.TERRY_ID) {
+      return this.terryCheckinRepo.findOneOrFail({
+        terryId: checkinId,
+        profileId,
+      });
+    }
     return this.terryCheckinRepo.findOneOrFail({ _id: checkinId, profileId });
   }
 

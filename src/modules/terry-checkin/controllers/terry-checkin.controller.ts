@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -26,7 +27,10 @@ import {
   UpdateTerryCheckinInputDto,
 } from '../dto/terry-checkin.dto';
 import { ProfileAccessGuard } from 'src/guards/store-access.guard';
-import { FilterTerryCheckinDto } from '../dto/terry-filter.dto';
+import {
+  FilterTerryCheckinDto,
+  ReadTerryCheckinQueryDto,
+} from '../dto/terry-filter.dto';
 import {
   Pagination,
   PaginationSwaggerQuery,
@@ -117,8 +121,12 @@ export class TerryCheckinController {
     ],
   })
   @Get(':id')
-  async get(@Param('profileId') profileId: string, @Param('id') id: string) {
-    return this.terryCheckinSvc.get(id, profileId);
+  async get(
+    @Param('profileId') profileId: string,
+    @Param('id') id: string,
+    @Query() query: ReadTerryCheckinQueryDto,
+  ) {
+    return this.terryCheckinSvc.get(id, profileId, query);
   }
 
   @EndpointConfig(
