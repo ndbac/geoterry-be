@@ -63,6 +63,11 @@ export class TerryInputDto {
   @IsOptional()
   hint?: string;
 
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  address?: string;
+
   @ApiProperty({ type: Boolean })
   @IsBoolean()
   @IsNotEmpty()

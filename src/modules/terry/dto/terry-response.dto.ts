@@ -56,6 +56,9 @@ export class TerryResponseDto extends BaseDbResponseDto {
   description?: string;
 
   @ApiPropertyOptional({ type: String })
+  address?: string;
+
+  @ApiPropertyOptional({ type: String })
   hint?: string;
 
   @ApiProperty({ type: Boolean })
