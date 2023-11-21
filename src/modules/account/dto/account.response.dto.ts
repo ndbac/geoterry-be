@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
-import { EIdentifierType, IamNamespace } from 'src/shared/types';
+import { EIdentifierType, IAccountRole, IamNamespace } from 'src/shared/types';
 
 export class AccountCredentialsResDto {
   @ApiProperty({ type: Date })
@@ -16,6 +16,9 @@ export class AccountCredentialsResDto {
 export class AccountResponseDto extends BaseDbResponseDto {
   @ApiProperty({ type: String, enum: IamNamespace })
   namespace: IamNamespace;
+
+  @ApiProperty({ type: String, enum: IAccountRole })
+  role: IAccountRole;
 
   @ApiProperty({ type: Boolean })
   blocked: boolean;

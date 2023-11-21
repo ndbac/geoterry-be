@@ -29,6 +29,7 @@ import {
 } from '../dto/account-recover.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { User } from 'src/decorators/user.decorator';
+import { SwitchRoleInputDto } from '../dto/account.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -99,5 +100,16 @@ export class AccountController {
   @Delete('/tear-down')
   async teardown(@User('userId') userId: string) {
     return this.accountService.teardown(userId);
+  }
+
+  @EndpointConfig(ACCOUNT_ENDPOINT_CONFIG[EAccountOperation.SWITCH_ROLE])
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @Put('/switch-role')
+  async switchRole(
+    @User('userId') userId: string,
+    @Body() data: SwitchRoleInputDto,
+  ) {
+    return this.accountService.switchRole(userId, data);
   }
 }

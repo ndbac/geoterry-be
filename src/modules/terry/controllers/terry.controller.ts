@@ -15,9 +15,9 @@ import { AuthEndpoint } from 'src/decorators/auth-endpoint.decorator';
 import { EndpointConfig } from 'src/decorators/endpoint-config.decorator';
 import { I18nExceptionFilter } from 'src/filters/i18n-exception.filter';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { IPagination, IamNamespace } from 'src/shared/types';
+import { IAccountRole, IPagination, IamNamespace } from 'src/shared/types';
 import { TerryService } from '../providers/terry.service';
-import { ProfileAccessGuard } from 'src/guards/store-access.guard';
+import { ProfileAccessGuard } from 'src/guards/profile-access.guard';
 import { ETerryOperation, TERRY_ENDPOINT_CONFIG } from './endpoint-config';
 import { TerryInputDto } from '../dto/terry.dto';
 import { TerryFilterInputDto } from '../dto/terry-filter.dto';
@@ -43,7 +43,17 @@ export class TerryController {
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_CREATE_TERRY])
   @AuthEndpoint({
-    namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+    rolesRequired: [
+      {
+        namespace: IamNamespace.GEOTERRY_HUNTERS,
+        roles: [IAccountRole.PARTNER],
+      },
+    ],
   })
   @UseInterceptors(NormalizedGeoJsonPointInterceptor)
   @Post()
@@ -53,7 +63,17 @@ export class TerryController {
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_UPDATE_TERRY])
   @AuthEndpoint({
-    namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+    rolesRequired: [
+      {
+        namespace: IamNamespace.GEOTERRY_HUNTERS,
+        roles: [IAccountRole.PARTNER],
+      },
+    ],
   })
   @UseInterceptors(NormalizedGeoJsonPointInterceptor)
   @Put(':id')
@@ -63,7 +83,17 @@ export class TerryController {
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_DELETE_TERRY])
   @AuthEndpoint({
-    namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+    rolesRequired: [
+      {
+        namespace: IamNamespace.GEOTERRY_HUNTERS,
+        roles: [IAccountRole.PARTNER],
+      },
+    ],
   })
   @UseInterceptors(NormalizedGeoJsonPointInterceptor)
   @Delete(':id')
@@ -73,7 +103,17 @@ export class TerryController {
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_GET_TERRIES])
   @AuthEndpoint({
-    namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+    rolesRequired: [
+      {
+        namespace: IamNamespace.GEOTERRY_HUNTERS,
+        roles: [IAccountRole.PARTNER],
+      },
+    ],
   })
   @UseInterceptors(
     InjectProfileToTerryInterceptor,
@@ -96,7 +136,17 @@ export class TerryController {
 
   @EndpointConfig(TERRY_ENDPOINT_CONFIG[ETerryOperation.BUILDER_GET_TERRY])
   @AuthEndpoint({
-    namespaces: [IamNamespace.GEOTERRY_ADMINS, IamNamespace.GEOTERRY_BUILDERS],
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+    rolesRequired: [
+      {
+        namespace: IamNamespace.GEOTERRY_HUNTERS,
+        roles: [IAccountRole.PARTNER],
+      },
+    ],
   })
   @UseInterceptors(
     InjectProfileToTerryInterceptor,

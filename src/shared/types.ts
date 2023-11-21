@@ -9,6 +9,7 @@ import { Request } from 'express';
 
 export enum CollectionName {
   ACCOUNTS = 'accounts',
+  ACCOUNT_METADATA = 'account-metadatas',
   PROFILES = 'profiles',
   TERRIES = 'terries',
   TERRY_CATEGORIES = 'terry-categories',
@@ -79,6 +80,11 @@ export enum IamNamespace {
   GEOTERRY_ADMINS = 'geoterry-admins',
   GEOTERRY_BUILDERS = 'geoterry-builders',
   GEOTERRY_HUNTERS = 'geoterry-hunters',
+}
+
+export enum IAccountRole {
+  PARTNER = 'partner',
+  USER = 'user',
 }
 
 export enum EIdentifierType {

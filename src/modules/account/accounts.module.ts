@@ -11,6 +11,7 @@ import { AccountController } from './controllers/accounts.controller';
 import { AccountService } from './providers/account.service';
 import { CommonModule } from '../common/common.module';
 import { UserMiddleware } from 'src/middlewares/user.middleware';
+import { AccountMetadataCoreModule } from './account-metadata.core.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserMiddleware } from 'src/middlewares/user.middleware';
     GeoterryI18nModule,
     TwilioSdkModule,
     CommonModule,
+    AccountMetadataCoreModule,
   ],
   providers: [AccountService],
   controllers: [AccountController],
@@ -32,6 +34,10 @@ export class AccountModule implements NestModule {
       {
         path: `/auth/tear-down`,
         method: RequestMethod.DELETE,
+      },
+      {
+        path: `/auth/switch-role`,
+        method: RequestMethod.PUT,
       },
     );
   }

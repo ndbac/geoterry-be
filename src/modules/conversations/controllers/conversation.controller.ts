@@ -2,7 +2,7 @@ import { Controller, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { I18nExceptionFilter } from 'src/filters/i18n-exception.filter';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { ProfileAccessGuard } from 'src/guards/store-access.guard';
+import { ProfileAccessGuard } from 'src/guards/profile-access.guard';
 import { ConversationService } from '../providers/conversation.service';
 
 @Controller('user/:profileId/conversations')
