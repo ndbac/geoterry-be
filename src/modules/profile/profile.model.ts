@@ -31,4 +31,7 @@ export class ProfileDocument extends BaseDocument {
 
   @Prop({ default: 0, required: true })
   rewardPoints: number;
+
+  @Prop({ default: 0, required: true })
+  totalCheckedinTerry: number;
 }

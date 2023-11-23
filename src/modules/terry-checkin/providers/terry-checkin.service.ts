@@ -46,7 +46,7 @@ export class TerryCheckinService {
       if (distance > maxDistance) {
         return throwStandardError(ErrorCode.OUT_OF_DISTANCE);
       }
-      if (data.rate) {
+      if (data.rate && data.isFound) {
         await this.updateTerryUserMapping(
           data.rate,
           terry.id,
@@ -56,13 +56,19 @@ export class TerryCheckinService {
       }
       await this.profileRepo.updateById(profileId, {
         $inc: {
-          rewardPoints:
-            (terry.metadata?.size || 0) +
-            (terry.metadata?.terrain || 0) +
-            (terry.metadata?.difficulty || 0),
+          rewardPoints: data.isFound
+            ? (terry.metadata?.size || 0) +
+              (terry.metadata?.terrain || 0) +
+              (terry.metadata?.difficulty || 0)
+            : 0,
+          totalCheckedinTerry: data.isFound ? 1 : 0,
         },
       });
-      return this.terryCheckinRepo.create({ profileId, ...data }, { session });
+      return this.terryCheckinRepo.updateOneOrCreate(
+        { profileId, terryId: data.terryId },
+        { profileId, ...data },
+        { session },
+      );
     });
   }
 

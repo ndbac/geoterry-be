@@ -29,4 +29,7 @@ export class ProfileResDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ type: Number })
   rewardPoints: number;
+
+  @ApiPropertyOptional({ type: Number })
+  totalCheckedinTerry: number;
 }

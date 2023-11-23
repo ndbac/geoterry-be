@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -34,6 +35,11 @@ export class TerryCheckinInputDto {
   @IsOptional()
   @IsString()
   reviewText?: string;
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @IsBoolean()
+  isFound: boolean;
 
   @ApiPropertyOptional({ type: [String] })
   @IsOptional()
@@ -126,6 +132,9 @@ export class TerryCheckinResDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ type: TerryDto })
   terry?: TerryDto;
+
+  @ApiProperty({ type: Boolean })
+  isFound: boolean;
 }
 
 export class UpdateTerryCheckinInputDto {
