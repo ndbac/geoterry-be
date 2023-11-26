@@ -1,9 +1,9 @@
 export const getMessagePath = (
-  userId = '{userId}',
+  profileId = '{profileId}',
   messageId = '{messageId}',
-) => `/users/${userId}/messages/${messageId}`;
+) => `/users/${profileId}/messages/${messageId}`;
 
 export const getConversationPath = (
-  userId = '{userId}',
+  profileId = '{profileId}',
   conversationId = '{conversationId}',
-) => `/users/${userId}/conversations/${conversationId}`;
+) => `/users/${profileId}/conversations/${conversationId}`;

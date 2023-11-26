@@ -33,4 +33,7 @@ export class MessageDocument extends BaseDocument {
 
   @Prop({ type: String })
   recipientId: string;
+
+  @Prop({ type: Date, default: Date.now() })
+  sentAt: Date;
 }

@@ -23,7 +23,7 @@ export class ConversationDocument extends BaseDocument {
     type: LastMsgDocument.schema,
     required: false,
   })
-  lastMsg?: LastMsgDocument;
+  lastMsg: LastMsgDocument;
 
   @Prop({ type: [String] })
   participants: string[];
