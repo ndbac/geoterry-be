@@ -11,10 +11,10 @@ export class MessagePayloadDocument extends EmbeddedDocument {
   @Prop({ enum: EMessageType })
   type: EMessageType;
 
-  @Prop({ type: String })
-  text: string;
+  @Prop({ type: String, required: false })
+  text?: string;
 
-  @Prop({ required: false })
+  @Prop({ required: false, type: String })
   mediaUrl?: string;
 }
 
@@ -28,6 +28,9 @@ export class MessageDocument extends BaseDocument {
   @Prop({ type: String })
   conversationId: string;
 
-  @Prop({ type: Boolean })
-  sentByRecipient: boolean;
+  @Prop({ type: String })
+  senderId: string;
+
+  @Prop({ type: String })
+  recipientId: string;
 }
