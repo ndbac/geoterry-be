@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
-import { LanguageCode } from 'src/shared/types';
+import { IAccountRole, LanguageCode } from 'src/shared/types';
 
 export class ProfileResDto extends BaseDbResponseDto {
   @ApiProperty({ type: String })
@@ -32,4 +32,7 @@ export class ProfileResDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ type: Number })
   totalCheckedinTerry: number;
+
+  @ApiProperty({ enum: IAccountRole })
+  role: IAccountRole;
 }
