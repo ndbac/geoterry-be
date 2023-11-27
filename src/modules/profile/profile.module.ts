@@ -8,9 +8,16 @@ import { UserProfileService } from './providers/user-profile.service';
 import { AwsSdkModule } from '../adapters/aws/aws-sdk.module';
 import { PublicProfileController } from './controllers/public-profile.controller';
 import { PublicProfileService } from './providers/public-profile.service';
+import { AccountMetadataCoreModule } from '../account/account-metadata.core.module';
 
 @Module({
-  imports: [ProfileCoreModule, AccountCoreModule, CommonModule, AwsSdkModule],
+  imports: [
+    ProfileCoreModule,
+    AccountMetadataCoreModule,
+    AccountCoreModule,
+    CommonModule,
+    AwsSdkModule,
+  ],
   providers: [UserProfileService, PublicProfileService],
   controllers: [UserProfileController, PublicProfileController],
 })

@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ERoleRequestStatus } from 'src/modules/account/types';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
 import { IAccountRole, LanguageCode } from 'src/shared/types';
 
@@ -35,4 +36,10 @@ export class ProfileResDto extends BaseDbResponseDto {
 
   @ApiProperty({ enum: IAccountRole })
   role: IAccountRole;
+
+  @ApiPropertyOptional({ enum: ERoleRequestStatus })
+  roleRequestingStatus?: ERoleRequestStatus;
+
+  @ApiPropertyOptional({ enum: IAccountRole })
+  roleRequesting?: IAccountRole;
 }

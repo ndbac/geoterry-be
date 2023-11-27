@@ -6,12 +6,15 @@ import { ICreateProfileData } from '../profile.types';
 import { throwStandardError } from 'src/errors/helpers';
 import { ErrorCode } from 'src/errors/error-defs';
 import { AccountRepository } from 'src/modules/account/accounts.repository';
+import { AccountMetadataRepository } from 'src/modules/account/account-metadata.repository';
+import { ERoleRequestStatus } from 'src/modules/account/types';
 
 @Injectable()
 export class UserProfileService {
   constructor(
     private readonly profileRepo: ProfileRepository,
     private readonly acccountRepo: AccountRepository,
+    private readonly accountMetadataRepo: AccountMetadataRepository,
   ) {}
 
   async onboardProfile(input: ICreateProfileData) {
@@ -38,8 +41,17 @@ export class UserProfileService {
     const profile = await this.profileRepo.findOneOrFail({
       userId,
     });
+    const metadata = await this.accountMetadataRepo.findOne({ userId });
     return {
       role: account.role,
+      roleRequestingStatus:
+        metadata?.roleRequest?.status !== ERoleRequestStatus.ACCEPTED
+          ? metadata?.roleRequest?.status
+          : undefined,
+      roleRequesting:
+        metadata?.roleRequest?.status !== ERoleRequestStatus.ACCEPTED
+          ? metadata?.roleRequest?.role
+          : undefined,
       ...convertObject(profile),
     };
   }
