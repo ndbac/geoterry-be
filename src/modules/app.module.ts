@@ -14,6 +14,7 @@ import { ConversationModule } from './conversations/conversations.module';
 import { MessageModule } from './messages/messages.module';
 import { TerryUserMappingModule } from './terry-user-mapping/terry-user-mapping.module';
 import { TerryUserPathModule } from './terry-user-path/terry-user-path.module';
+import { AppGlobalModule } from './app-global/app-global.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { TerryUserPathModule } from './terry-user-path/terry-user-path.module';
     MessageModule,
     TerryUserMappingModule,
     TerryUserPathModule,
+    AppGlobalModule,
   ],
 })
 export class AppModule {}

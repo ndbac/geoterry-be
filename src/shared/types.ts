@@ -21,6 +21,7 @@ export enum CollectionName {
   MESSAGES = 'messages',
   TERRY_USER_MAPPINGS = 'terry-user-mappings',
   TERRY_USER_PATHS = 'terry-user-paths',
+  APP_GLOBALS = 'app-globals',
 }
 
 export type PossiblyAsync<T> = T | Promise<T>;
