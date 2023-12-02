@@ -113,11 +113,12 @@ export class TerryCheckinService {
         terryId: checkinId,
         profileId,
       });
+    } else {
+      terryCheckin = await this.terryCheckinRepo.findOneOrFail({
+        _id: checkinId,
+        profileId,
+      });
     }
-    terryCheckin = await this.terryCheckinRepo.findOneOrFail({
-      _id: checkinId,
-      profileId,
-    });
     if (query.includeUserPath) {
       const mapping = await this.terryUserMappingRepo.findOne({
         terryId: terryCheckin.terryId,
