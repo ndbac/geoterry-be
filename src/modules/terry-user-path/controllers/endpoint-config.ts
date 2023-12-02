@@ -36,5 +36,6 @@ export const TERRY_USER_PATH_ENDPOINT_CONFIG: Record<
         status: HttpStatus.OK,
       },
     ],
+    deprecated: true,
   },
 };

@@ -67,6 +67,6 @@ export class TerryUserPathController {
     @Param('profileId') profileId: string,
     @Param('terryId') terryId: string,
   ) {
-    return this.terryUserPathSvc.upsert(data, profileId, terryId);
+    return this.terryUserPathSvc.upsertPath(data, profileId, terryId);
   }
 }

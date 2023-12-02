@@ -96,4 +96,7 @@ export class TerryResponseDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ type: Boolean })
   checkedIn?: boolean;
+
+  @ApiPropertyOptional({ type: String })
+  path?: string;
 }

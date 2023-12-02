@@ -1,6 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
 import { ETerryCheckedInFindAspects } from '../types';
+import { Transform } from 'class-transformer';
+import _ from 'lodash';
 
 export class FilterTerryCheckinDto {
   @ApiPropertyOptional({ type: [String] })
@@ -14,4 +16,13 @@ export class ReadTerryCheckinQueryDto {
   @IsOptional()
   @IsEnum(ETerryCheckedInFindAspects)
   findBy?: ETerryCheckedInFindAspects;
+
+  @ApiPropertyOptional({ type: Boolean })
+  @Transform(({ value }) => {
+    if (_.isNil(value)) return undefined;
+    return value === 'true';
+  })
+  @IsBoolean()
+  @IsOptional()
+  includeUserPath?: boolean;
 }

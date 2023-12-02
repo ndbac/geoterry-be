@@ -4,6 +4,9 @@ import { CollectionName } from 'src/shared/types';
 import { TerryUserPathDocument } from './terry-user-path.model';
 import { TerryUserPathRepository } from './terry-user-path.repository';
 
+/**
+ * @deprecated since move to use terry-user-mapping
+ */
 @Module({
   imports: [
     MongooseModule.forFeature([

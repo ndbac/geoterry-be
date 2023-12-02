@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
 
 export class TerryUserMappingResDto extends BaseDbResponseDto {
@@ -20,6 +20,9 @@ export class TerryUserMappingResDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ type: Boolean })
   saved?: boolean;
+
+  @ApiPropertyOptional({ type: String })
+  path?: string;
 }
 
 export class UpsertTerryUserMappingInputDto {
@@ -32,4 +35,9 @@ export class UpsertTerryUserMappingInputDto {
   @IsBoolean()
   @IsOptional()
   saved?: boolean;
+
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  path?: string;
 }

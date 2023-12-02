@@ -20,6 +20,8 @@ import { TerryUserMappingRepository } from 'src/modules/terry-user-mapping/terry
 import { ClientSession } from 'mongoose';
 import { ProfileRepository } from 'src/modules/profile/profile.repository';
 import { ETerryCheckedInFindAspects } from '../types';
+import { TerryCheckinDocument } from '../terry-checkin.model';
+import { convertObject } from 'src/shared/mongoose/helpers';
 
 @Injectable()
 export class TerryCheckinService {
@@ -105,13 +107,25 @@ export class TerryCheckinService {
     profileId: string,
     query: ReadTerryCheckinQueryDto,
   ) {
+    let terryCheckin: TerryCheckinDocument | undefined = undefined;
     if (query.findBy === ETerryCheckedInFindAspects.TERRY_ID) {
-      return this.terryCheckinRepo.findOneOrFail({
+      terryCheckin = await this.terryCheckinRepo.findOneOrFail({
         terryId: checkinId,
         profileId,
       });
     }
-    return this.terryCheckinRepo.findOneOrFail({ _id: checkinId, profileId });
+    terryCheckin = await this.terryCheckinRepo.findOneOrFail({
+      _id: checkinId,
+      profileId,
+    });
+    if (query.includeUserPath) {
+      const mapping = await this.terryUserMappingRepo.findOne({
+        terryId: terryCheckin.terryId,
+        profileId,
+      });
+      return { ...convertObject(terryCheckin), path: mapping?.path };
+    }
+    return terryCheckin;
   }
 
   async delete(checkinId: string, profileId: string) {

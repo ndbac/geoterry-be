@@ -7,6 +7,7 @@ import { TerryUserPathCoreModule } from './terry-user-path.core.module';
 import { TerryUserPathService } from './providers/terry-user-path.service';
 import { TerryUserPathController } from './controllers/terry-user-path.controller';
 import { TerryCoreModule } from '../terry/terry.core.module';
+import { TerryUserMappingCoreModule } from '../terry-user-mapping/terry-user-mapping.core.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TerryCoreModule } from '../terry/terry.core.module';
     AccountCoreModule,
     CommonModule,
     TerryCoreModule,
+    TerryUserMappingCoreModule,
   ],
   providers: [TerryUserPathService],
   controllers: [TerryUserPathController],

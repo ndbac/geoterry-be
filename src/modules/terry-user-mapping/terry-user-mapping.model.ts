@@ -21,4 +21,7 @@ export class TerryUserMappingDocument extends BaseDocument {
 
   @Prop({ required: false })
   saved?: boolean;
+
+  @Prop({ required: false })
+  path?: string;
 }
