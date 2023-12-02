@@ -86,7 +86,9 @@ export class TerrySearchHelper {
             query: {
               ...commonFilter,
               ...textSearchOption,
-              ...(categoryIds ? { categoryIds: { $in: categoryIds } } : []),
+              ...(!_.isEmpty(categoryIds)
+                ? { categoryIds: { $in: categoryIds } }
+                : []),
               $and: [
                 ...(!_.isEmpty(size)
                   ? [
