@@ -1,14 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Database } from 'firebase-admin/lib/database/database';
 import { app } from './firebase';
 
+export const RTDB_PROVIDER = 'geoterry-be-rtdb';
+
+export const rtdbProvider = {
+  provide: RTDB_PROVIDER,
+  useFactory: (): Database => {
+    return app.database();
+  },
+};
+
 @Injectable()
 export class RtdbService {
-  private db: Database;
-
-  constructor() {
-    this.db = app.database();
-  }
+  constructor(
+    @Inject(RTDB_PROVIDER)
+    private readonly db: Database,
+  ) {}
 
   getRef(path: string) {
     return this.db.ref(path);

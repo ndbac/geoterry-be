@@ -4,12 +4,21 @@ import { GetConversationMessagesOptions } from '../dto/message-common.dto';
 import { IPagination } from 'src/shared/types';
 import { getPaginationHeaders } from 'src/shared/pagination.helpers';
 import { ConversationRepository } from 'src/modules/conversations/conversations.repository';
+import { SendMessageInputDto } from '../dto/create-message.dto';
+import { ConversationDocument } from 'src/modules/conversations/conversations.model';
+import _ from 'lodash';
+import { RtdbService } from 'src/modules/adapters/firebase/rtdb.provider';
+import { getMessagePath } from 'src/shared/firebase.helpers';
+import { convertObject } from 'src/shared/mongoose/helpers';
+import { ProfileRepository } from 'src/modules/profile/profile.repository';
 
 @Injectable()
 export class MessageService {
   constructor(
     private readonly messageRepo: MessageRepository,
     private readonly conversationRepo: ConversationRepository,
+    private readonly rtdbSvc: RtdbService,
+    private readonly profileRepo: ProfileRepository,
   ) {}
 
   async getConvMessages(
@@ -47,6 +56,109 @@ export class MessageService {
         items: data,
         headers: getPaginationHeaders(pagination, total),
       };
+    });
+  }
+
+  async sendMessage(profileId: string, input: SendMessageInputDto) {
+    return this.messageRepo.withTransaction(async (session) => {
+      let conversation: ConversationDocument | undefined = undefined;
+      // Send to old conversation
+      if (input.conversationId) {
+        conversation = await this.conversationRepo.findByIdOrFail(
+          input.conversationId,
+          { session },
+        );
+        await this.conversationRepo.updateById(
+          conversation.id,
+          {
+            msgCount: conversation.msgCount + 1,
+            lastMsg: {
+              snippet: input.payload.text || input.payload.mediaUrl,
+              sentAt: new Date(),
+              sentByProfileId: profileId,
+            },
+            participants: [
+              {
+                profileId,
+                unreadMsgCnt: 0,
+              },
+              {
+                profileId:
+                  conversation.participants[0].profileId === profileId
+                    ? conversation.participants[1].profileId
+                    : conversation.participants[0].profileId,
+                unreadMsgCnt:
+                  (conversation.participants.find(
+                    (participant) => participant.profileId !== profileId,
+                  )?.unreadMsgCnt || 0) + 1,
+              },
+            ],
+          },
+          { session },
+        );
+      } else if (input.recipientId) {
+        // Create new conversation
+        conversation = await this.conversationRepo.create(
+          {
+            participants: [
+              {
+                profileId,
+                unreadMsgCnt: 0,
+              },
+              {
+                profileId: input.recipientId,
+                unreadMsgCnt: 1,
+              },
+            ],
+            msgCount: 1,
+            lastMsg: {
+              snippet: input.payload.text || input.payload.mediaUrl,
+              sentAt: new Date(),
+              sentByProfileId: profileId,
+            },
+          },
+          { session },
+        );
+      }
+
+      if (_.isNil(conversation)) return;
+
+      const recipientId =
+        conversation.participants[0].profileId === profileId
+          ? conversation.participants[1].profileId
+          : conversation.participants[0].profileId;
+
+      const message = await this.messageRepo.create(
+        {
+          conversationId: input.conversationId,
+          senderId: profileId,
+          recipientId,
+          payload: input.payload,
+          sentAt: new Date(),
+        },
+        { session },
+      );
+
+      const dataToSendToRtdb = {
+        ..._.omit(convertObject(message), ['createdAt', 'updatedAt', '_id']),
+        chatServiceId: message.id,
+      } as any;
+      if (input.recipientId) {
+        const sender = await this.profileRepo.findByIdOrFail(profileId);
+        dataToSendToRtdb.sender = {
+          displayName: sender.displayName,
+          logoUrl: sender.logoUrl,
+        };
+      }
+      await this.rtdbSvc.create(
+        getMessagePath(recipientId, ''),
+        dataToSendToRtdb,
+        {
+          addId: true,
+        },
+      );
+
+      return message;
     });
   }
 }

@@ -24,8 +24,8 @@ import {
   EConversationOperation,
 } from './endpoint-config';
 
-@Controller('user/:profileId/conversations')
-@ApiTags('user.conversations')
+@Controller('hunter/:profileId/conversations')
+@ApiTags('hunter.conversations')
 @UseGuards(AuthGuard, ProfileAccessGuard)
 @UseFilters(I18nExceptionFilter)
 @ApiBearerAuth()

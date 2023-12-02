@@ -17,6 +17,7 @@ firebase:
   config:
     __name: FIREBASE_CONFIG
     __format: json
+  rtdbUrl: FIREBASE_RTDB_URL
 
 sentry:
   dsn: SENTRY_DSN

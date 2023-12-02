@@ -1,7 +1,9 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
+  Post,
   Query,
   UseFilters,
   UseGuards,
@@ -22,9 +24,10 @@ import { AuthEndpoint } from 'src/decorators/auth-endpoint.decorator';
 import { EMessageOperation, MESSAGE_ENDPOINT_CONFIG } from './endpoint-config';
 import { EndpointConfig } from 'src/decorators/endpoint-config.decorator';
 import { GetConversationMessagesOptions } from '../dto/message-common.dto';
+import { SendMessageInputDto } from '../dto/create-message.dto';
 
-@Controller('user/:profileId/conversation/:conversationId/messages')
-@ApiTags('user.messages')
+@Controller('hunter/:profileId')
+@ApiTags('hunter.messages')
 @UseGuards(AuthGuard, ProfileAccessGuard)
 @UseFilters(I18nExceptionFilter)
 @ApiBearerAuth()
@@ -45,12 +48,30 @@ export class MessageController {
   })
   @UseInterceptors(PaginationInterceptor)
   @PaginationSwaggerQuery()
-  @Get('filter')
+  @Get('conversation/:conversationId/messages')
   filter(
     @Param('conversationId') conversationId: string,
     @Query() options: GetConversationMessagesOptions,
     @Pagination() pagination: IPagination,
   ) {
     return this.messageSvc.getConvMessages(conversationId, options, pagination);
+  }
+
+  @EndpointConfig(
+    MESSAGE_ENDPOINT_CONFIG[EMessageOperation.HUNTER_SEND_MESSAGE],
+  )
+  @AuthEndpoint({
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+  })
+  @Post('messages/send-message')
+  sendMessage(
+    @Param('profileId') profileId: string,
+    @Body() payload: SendMessageInputDto,
+  ) {
+    return this.messageSvc.sendMessage(profileId, payload);
   }
 }

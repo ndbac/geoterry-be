@@ -17,19 +17,25 @@ export class LastMsgDocument extends EmbeddedDocument {
   sentByProfileId: string;
 }
 
+@Schema({ _id: false })
+export class ParticipantDocument extends EmbeddedDocument {
+  @Prop({ required: true })
+  profileId: string;
+
+  @Prop({ required: true })
+  unreadMsgCnt: number;
+}
+
 @Schema(DefaultSchemaOptions)
 export class ConversationDocument extends BaseDocument {
   @Prop({
     type: LastMsgDocument.schema,
-    required: false,
+    required: true,
   })
   lastMsg: LastMsgDocument;
 
-  @Prop({ type: [String] })
-  participants: string[];
-
-  @Prop({ type: Number, default: 0 })
-  unreadMsgCnt: number;
+  @Prop({ type: [ParticipantDocument.schema] })
+  participants: ParticipantDocument[];
 
   @Prop({ type: Number, default: 0 })
   msgCount: number;

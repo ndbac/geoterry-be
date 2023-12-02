@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
 
-export class ConversationLastMsgResDto extends BaseDbResponseDto {
+export class ConversationLastMsgResDto {
   @ApiProperty({ type: String })
   snippet: string;
 
@@ -12,12 +12,20 @@ export class ConversationLastMsgResDto extends BaseDbResponseDto {
   sentByProfileId: string;
 }
 
+export class ParticipantResDto {
+  @ApiProperty({ type: String })
+  profileId: string;
+
+  @ApiProperty({ type: Number })
+  unreadMsgCnt: number;
+}
+
 export class ConversationResDto extends BaseDbResponseDto {
   @ApiProperty({ type: ConversationLastMsgResDto })
   lastMsg: ConversationLastMsgResDto;
 
-  @ApiProperty({ type: [String] })
-  participants: string[];
+  @ApiProperty({ type: [ParticipantResDto] })
+  participants: ParticipantResDto[];
 
   @ApiProperty({ type: String })
   profileId: string;

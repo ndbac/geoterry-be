@@ -28,6 +28,7 @@ aws:
 
 firebase:
   config: sample-firebase-config-in-json
+  rtdbUrl: sample-firebase-rtdb-url
 
 logger:
   formatter: local-custom

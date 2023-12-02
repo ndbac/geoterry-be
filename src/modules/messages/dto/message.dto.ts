@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
 import { EMessageType } from '../types';
 
-export class MessagePayloadResDto extends BaseDbResponseDto {
+export class MessagePayloadResDto {
   @ApiProperty({ enum: EMessageType })
   type: EMessageType;
 
