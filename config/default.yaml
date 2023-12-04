@@ -64,3 +64,7 @@ imageUpload:
 
 terry:
   maxDistanceToCheckin: 30
+
+chat:
+  conversation:
+    prefetchMessageCount: 15

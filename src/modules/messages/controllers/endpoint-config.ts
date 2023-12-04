@@ -15,6 +15,11 @@ export const MESSAGE_ENDPOINT_CONFIG: Record<
   [EMessageOperation.HUNTER_READ_CONVERSATION_MESSAGES]: {
     operationId: EMessageOperation.HUNTER_READ_CONVERSATION_MESSAGES,
     summary: 'Hunter get conversation message',
+    params: [
+      {
+        name: 'profileId',
+      },
+    ],
     responses: [
       {
         type: [MessageResDto],

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { MessageRepository } from '../messages.repository';
 import { GetConversationMessagesOptions } from '../dto/message-common.dto';
 import { IPagination } from 'src/shared/types';
@@ -97,7 +97,16 @@ export class MessageService {
           { session },
         );
       } else if (input.recipientId) {
-        // Create new conversation
+        const existed = await this.conversationRepo.exists({
+          'participants.profileId': { $all: [profileId, input.recipientId] },
+        });
+        if (existed) {
+          throw new BadRequestException({
+            message: `Conververstaion with recipient ID: ${input.recipientId} is already initilized!`,
+            sentryAlertDisabled: true,
+          });
+        }
+        // Initilize conversation
         conversation = await this.conversationRepo.create(
           {
             participants: [
@@ -130,7 +139,7 @@ export class MessageService {
 
       const message = await this.messageRepo.create(
         {
-          conversationId: input.conversationId,
+          conversationId: conversation.id,
           senderId: profileId,
           recipientId,
           payload: input.payload,
@@ -144,7 +153,9 @@ export class MessageService {
         chatServiceId: message.id,
       } as any;
       if (input.recipientId) {
-        const sender = await this.profileRepo.findByIdOrFail(profileId);
+        const sender = await this.profileRepo.findByIdOrFail(profileId, {
+          session,
+        });
         dataToSendToRtdb.sender = {
           displayName: sender.displayName,
           logoUrl: sender.logoUrl,

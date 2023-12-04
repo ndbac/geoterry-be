@@ -13,6 +13,18 @@ export const CONVERSATION_ENDPOINT_CONFIG: Record<
   [EConversationOperation.HUNTER_FILTER_CONVERSATIONS]: {
     operationId: EConversationOperation.HUNTER_FILTER_CONVERSATIONS,
     summary: 'Hunter filter conversation',
+    query: [
+      {
+        name: 'includeProfileData',
+        type: Boolean,
+        required: false,
+      },
+      {
+        name: 'prefetchMessage',
+        type: Boolean,
+        required: false,
+      },
+    ],
     responses: [
       {
         type: [ConversationResDto],

@@ -23,6 +23,8 @@ import {
   CONVERSATION_ENDPOINT_CONFIG,
   EConversationOperation,
 } from './endpoint-config';
+import { InjectProfileDataToConversationInterceptor } from 'src/interceptors/conversation/inject-user-profile-to-conversation.interceptor';
+import { InjectMessageToConversationInterceptor } from 'src/interceptors/conversation/inject-message-to-conversation.interceptor';
 
 @Controller('hunter/:profileId/conversations')
 @ApiTags('hunter.conversations')
@@ -44,7 +46,11 @@ export class ConversationController {
       IamNamespace.GEOTERRY_HUNTERS,
     ],
   })
-  @UseInterceptors(PaginationInterceptor)
+  @UseInterceptors(
+    InjectMessageToConversationInterceptor,
+    InjectProfileDataToConversationInterceptor,
+    PaginationInterceptor,
+  )
   @PaginationSwaggerQuery()
   @Post('filter')
   filter(

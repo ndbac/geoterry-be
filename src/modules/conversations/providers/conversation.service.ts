@@ -9,7 +9,7 @@ export class ConversationService {
 
   async filterConversations(profileId: string, pagination: IPagination) {
     const data = await this.conversationRepo.find(
-      { participants: { $in: [profileId] } },
+      { 'participants.profileId': { $in: [profileId] } },
       {
         skip: pagination.offset,
         limit: pagination.pageSize,
@@ -17,7 +17,7 @@ export class ConversationService {
       },
     );
     const total = await this.conversationRepo.countWithFindOption({
-      participants: { $in: [profileId] },
+      'participants.profileId': { $in: [profileId] },
     });
     return {
       items: data,

@@ -6,6 +6,7 @@ import { ProfileCoreModule } from '../profile/profile.core.module';
 import { ConversationCoreModule } from './conversations.core.module';
 import { ConversationController } from './controllers/conversation.controller';
 import { ConversationService } from './providers/conversation.service';
+import { MessageCoreModule } from '../messages/messages.core.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ConversationService } from './providers/conversation.service';
     ProfileCoreModule,
     AccountCoreModule,
     CommonModule,
+    MessageCoreModule,
   ],
   providers: [ConversationService],
   controllers: [ConversationController],
