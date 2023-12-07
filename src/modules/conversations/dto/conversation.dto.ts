@@ -34,12 +34,6 @@ export class ConversationResDto extends BaseDbResponseDto {
   @ApiProperty({ type: [ParticipantResDto] })
   participants: ParticipantResDto[];
 
-  @ApiProperty({ type: String })
-  profileId: string;
-
-  @ApiProperty({ type: Number })
-  unreadMsgCnt: number;
-
   @ApiProperty({ type: Number })
   msgCount: number;
 
