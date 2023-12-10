@@ -135,6 +135,9 @@ export class TerryCheckinResDto extends BaseDbResponseDto {
 
   @ApiProperty({ type: Boolean })
   isFound: boolean;
+
+  @ApiPropertyOptional({ type: String })
+  path?: string;
 }
 
 export class UpdateTerryCheckinInputDto {
