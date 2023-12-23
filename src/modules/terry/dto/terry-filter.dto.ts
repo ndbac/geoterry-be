@@ -15,10 +15,12 @@ import _ from 'lodash';
 export class LocationDto {
   @ApiProperty({ type: Number })
   @IsNumber()
+  @IsNotEmpty()
   latitude: number;
 
   @ApiProperty({ type: Number })
   @IsNumber()
+  @IsNotEmpty()
   longitude: number;
 }
 

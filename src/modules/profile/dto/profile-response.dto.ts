@@ -3,6 +3,17 @@ import { ERoleRequestStatus } from 'src/modules/account/types';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
 import { IAccountRole, LanguageCode } from 'src/shared/types';
 
+export class ProfileLastLocationResDto {
+  @ApiProperty({ type: Number })
+  latitude: number;
+
+  @ApiProperty({ type: Number })
+  longitude: number;
+
+  @ApiProperty({ type: Date })
+  updatedAt: Date;
+}
+
 export class ProfileResDto extends BaseDbResponseDto {
   @ApiProperty({ type: String })
   displayName: string;
@@ -42,4 +53,12 @@ export class ProfileResDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ enum: IAccountRole })
   roleRequesting?: IAccountRole;
+
+  @ApiPropertyOptional({ type: ProfileLastLocationResDto })
+  lastLocation?: ProfileLastLocationResDto;
+}
+
+export class UserGetProfileNearbyResDto {
+  @ApiProperty({ type: Number })
+  profileId: number;
 }

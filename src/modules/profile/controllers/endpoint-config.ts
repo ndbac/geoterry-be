@@ -2,8 +2,15 @@ import { HttpStatus } from '@nestjs/common';
 import { IEndpointConfiguration } from 'src/shared/types';
 import { UploadPhotoDto, UploadPhotoResponseDto } from '../dto/common.dto';
 import { CreateProfileReqDto } from '../dto/create-profile.dto';
-import { ProfileResDto } from '../dto/profile-response.dto';
-import { UpdateProfileReqDto } from '../dto/update-profile.dto';
+import {
+  ProfileResDto,
+  UserGetProfileNearbyResDto,
+} from '../dto/profile-response.dto';
+import {
+  UpdateProfileLocationReqDto,
+  UpdateProfileReqDto,
+} from '../dto/update-profile.dto';
+import { UserGetProfileNearbyReqDto } from '../dto/profile.dto';
 
 export enum EAccountOperation {
   USER_CREATE_PROFILE = 'userCreateProfile',
@@ -11,6 +18,8 @@ export enum EAccountOperation {
   USER_READ_PROFILE = 'userReadProfile',
   USER_UPLOAD_PHOTO = 'userUploadPhoto',
   PUBLIC_READ_PROFILE = 'publicReadProfile',
+  USER_UPDATE_PROFILE_LOCATION = 'userUpdateProfileLocation',
+  USER_GET_PROFILE_NEARBY = 'userGetProfileNearby',
 }
 
 export const ACCOUNT_ENDPOINT_CONFIG: Record<
@@ -72,6 +81,32 @@ export const ACCOUNT_ENDPOINT_CONFIG: Record<
     responses: [
       {
         type: ProfileResDto,
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [EAccountOperation.USER_UPDATE_PROFILE_LOCATION]: {
+    operationId: EAccountOperation.USER_UPDATE_PROFILE_LOCATION,
+    summary: 'User update profile location',
+    body: {
+      type: UpdateProfileLocationReqDto,
+    },
+    responses: [
+      {
+        type: ProfileResDto,
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [EAccountOperation.USER_GET_PROFILE_NEARBY]: {
+    operationId: EAccountOperation.USER_GET_PROFILE_NEARBY,
+    summary: 'User get profiles nearby',
+    body: {
+      type: UserGetProfileNearbyReqDto,
+    },
+    responses: [
+      {
+        type: [UserGetProfileNearbyResDto],
         status: HttpStatus.OK,
       },
     ],

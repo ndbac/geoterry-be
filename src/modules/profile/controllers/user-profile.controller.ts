@@ -18,12 +18,17 @@ import { UserCreateProfileInputWithUserContextDto } from '../dto/create-profile.
 import { UserProfileService } from '../providers/user-profile.service';
 import { ACCOUNT_ENDPOINT_CONFIG, EAccountOperation } from './endpoint-config';
 import { User } from 'src/decorators/user.decorator';
-import { UpdateProfileReqDto } from '../dto/update-profile.dto';
+import {
+  UpdateProfileLocationReqDto,
+  UpdateProfileReqDto,
+} from '../dto/update-profile.dto';
 import { GeneralActionStatus, IamNamespace } from 'src/shared/types';
 import { AuthEndpoint } from 'src/decorators/auth-endpoint.decorator';
 import { throwStandardError } from 'src/errors/helpers';
 import { ErrorCode } from 'src/errors/error-defs';
 import { UploadPhotoInterceptor } from 'src/interceptors/upload-photo.interceptor';
+import { NormalizedGeoJsonPointForProfileInterceptor } from 'src/interceptors/profile/normalized-geo-json-point-for-profile.interceptor';
+import { UserGetProfileNearbyReqDto } from '../dto/profile.dto';
 
 @Controller('profile')
 @ApiTags('user.profile')
@@ -102,5 +107,42 @@ export class UserProfileController {
       status: GeneralActionStatus.SUCCEEDED,
       photoUrl: file.path,
     };
+  }
+
+  @EndpointConfig(
+    ACCOUNT_ENDPOINT_CONFIG[EAccountOperation.USER_UPDATE_PROFILE_LOCATION],
+  )
+  @AuthEndpoint({
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+  })
+  @UseInterceptors(NormalizedGeoJsonPointForProfileInterceptor)
+  @Put('location')
+  async updateProfileLocation(
+    @User('userId') userId: string,
+    @Body() input: UpdateProfileLocationReqDto,
+  ) {
+    return this.userProfileSvc.updateProfileLocation(userId, input);
+  }
+
+  @EndpointConfig(
+    ACCOUNT_ENDPOINT_CONFIG[EAccountOperation.USER_GET_PROFILE_NEARBY],
+  )
+  @AuthEndpoint({
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+  })
+  @Post('profile-nearby')
+  async getProfileNearby(
+    @User('userId') userId: string,
+    @Body() input: UserGetProfileNearbyReqDto,
+  ) {
+    return this.userProfileSvc.getProfileNearby(userId, input);
   }
 }

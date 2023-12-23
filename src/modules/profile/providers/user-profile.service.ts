@@ -1,6 +1,9 @@
 import { convertObject } from 'src/shared/mongoose/helpers';
 import { Injectable } from '@nestjs/common';
-import { UpdateProfileReqDto } from '../dto/update-profile.dto';
+import {
+  UpdateProfileLocationReqDto,
+  UpdateProfileReqDto,
+} from '../dto/update-profile.dto';
 import { ProfileRepository } from '../profile.repository';
 import { ICreateProfileData } from '../profile.types';
 import { throwStandardError } from 'src/errors/helpers';
@@ -8,6 +11,12 @@ import { ErrorCode } from 'src/errors/error-defs';
 import { AccountRepository } from 'src/modules/account/accounts.repository';
 import { AccountMetadataRepository } from 'src/modules/account/account-metadata.repository';
 import { ERoleRequestStatus } from 'src/modules/account/types';
+import { MongoLocationType } from 'src/shared/mongoose/types';
+import { UserGetProfileNearbyReqDto } from '../dto/profile.dto';
+import { PROFILE_NEARBY_MAX_DISTANCE_IN_METER_DEFAULT } from 'src/modules/terry/constants';
+import { isAfter, sub } from 'date-fns';
+import { RtdbService } from 'src/modules/adapters/firebase/rtdb.provider';
+import { getLocationPath } from 'src/shared/firebase.helpers';
 
 @Injectable()
 export class UserProfileService {
@@ -15,6 +24,7 @@ export class UserProfileService {
     private readonly profileRepo: ProfileRepository,
     private readonly acccountRepo: AccountRepository,
     private readonly accountMetadataRepo: AccountMetadataRepository,
+    private readonly rtdbSvc: RtdbService,
   ) {}
 
   async onboardProfile(input: ICreateProfileData) {
@@ -79,6 +89,128 @@ export class UserProfileService {
         }
       }
       return this.profileRepo.updateById(profile.id, input, { session });
+    });
+  }
+
+  async updateProfileLocation(
+    userId: string,
+    input: UpdateProfileLocationReqDto,
+  ) {
+    const profile = await this.profileRepo.updateOne(
+      {
+        userId,
+      },
+      {
+        lastLocation: {
+          type: MongoLocationType.POINT,
+          coordinates: [input.longitude, input.latitude],
+          updatedAt: new Date(),
+        },
+      },
+    );
+
+    if (!profile) {
+      return this.profileRepo.throwErrorNotFound();
+    }
+
+    await this.asyncLocationToRtdb(
+      profile.id,
+      input.latitude,
+      input.longitude,
+      profile.lastLocation?.updatedAt || new Date(),
+    );
+
+    return profile;
+  }
+
+  async getProfileNearby(userId: string, input: UserGetProfileNearbyReqDto) {
+    return this.profileRepo.withTransaction(async (session) => {
+      let currentLocation = {
+        latitude: input.latitude,
+        longitude: input.longitude,
+      };
+      if (!currentLocation.latitude || !currentLocation.longitude) {
+        const profile = await this.profileRepo.findOneOrFail(
+          {
+            userId,
+          },
+          { session },
+        );
+        if (!profile.lastLocation) return [];
+        currentLocation = {
+          longitude: profile.lastLocation.coordinates[0],
+          latitude: profile.lastLocation.coordinates[1],
+        };
+      } else {
+        // update last location of user
+        const profile = await this.profileRepo.updateOne(
+          {
+            userId,
+          },
+          {
+            lastLocation: {
+              type: MongoLocationType.POINT,
+              coordinates: [
+                currentLocation.longitude,
+                currentLocation.latitude,
+              ],
+              updatedAt: new Date(),
+            },
+          },
+          { session },
+        );
+        profile &&
+          (await this.asyncLocationToRtdb(
+            profile.id,
+            currentLocation.latitude,
+            currentLocation.longitude,
+            profile.lastLocation?.updatedAt || new Date(),
+          ));
+      }
+      const profiles = await this.profileRepo.find(
+        {
+          lastLocation: {
+            $near: {
+              $geometry: {
+                type: MongoLocationType.POINT,
+                coordinates: [
+                  currentLocation.longitude,
+                  currentLocation.latitude,
+                ],
+              },
+              $maxDistance: PROFILE_NEARBY_MAX_DISTANCE_IN_METER_DEFAULT,
+            },
+          },
+        },
+        { session },
+      );
+      return profiles
+        .filter(
+          (profile) =>
+            profile.lastLocation &&
+            isAfter(
+              profile.lastLocation.updatedAt,
+              // only return profiles that have been updated location within 5 minutes
+              sub(new Date(), { minutes: 15 }),
+            ) &&
+            profile.userId !== userId,
+        )
+        .map((profile) => ({ profileId: profile.id }));
+    });
+  }
+
+  private async asyncLocationToRtdb(
+    profileId: string,
+    latitude: number,
+    longitude: number,
+    updatedAt: Date,
+  ) {
+    await this.rtdbSvc.updateByPathOrCreate(getLocationPath(profileId), {
+      location: {
+        latitude,
+        longitude,
+      },
+      updatedAt: updatedAt.getTime(),
     });
   }
 }

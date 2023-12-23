@@ -9,6 +9,7 @@ import { AwsSdkModule } from '../adapters/aws/aws-sdk.module';
 import { PublicProfileController } from './controllers/public-profile.controller';
 import { PublicProfileService } from './providers/public-profile.service';
 import { AccountMetadataCoreModule } from '../account/account-metadata.core.module';
+import { FirebaseModule } from '../adapters/firebase/firebase-sdk.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AccountMetadataCoreModule } from '../account/account-metadata.core.modu
     AccountCoreModule,
     CommonModule,
     AwsSdkModule,
+    FirebaseModule,
   ],
   providers: [UserProfileService, PublicProfileService],
   controllers: [UserProfileController, PublicProfileController],
