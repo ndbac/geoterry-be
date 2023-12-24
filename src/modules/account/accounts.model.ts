@@ -4,7 +4,7 @@ import {
   BaseDocument,
 } from 'src/shared/mongoose/base.document';
 import { DefaultSchemaOptions } from 'src/shared/mongoose/schema-option';
-import { EIdentifierType, IamNamespace } from 'src/shared/types';
+import { EIdentifierType, IAccountRole, IamNamespace } from 'src/shared/types';
 
 @Schema({ _id: false })
 export class CredentialsDocument extends EmbeddedDocument {
@@ -25,6 +25,9 @@ export class CredentialsDocument extends EmbeddedDocument {
 export class AccountDocument extends BaseDocument {
   @Prop({ required: true, enum: IamNamespace })
   namespace: IamNamespace;
+
+  @Prop({ required: true, enum: IAccountRole, default: IAccountRole.USER })
+  role: IAccountRole;
 
   @Prop({ default: false, required: true })
   blocked: boolean;

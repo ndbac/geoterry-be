@@ -16,14 +16,14 @@ export class TerryLocationResDto {
 }
 
 export class TerryMetadataResDto {
-  @ApiPropertyOptional({ type: Number })
-  size?: number;
+  @ApiProperty({ type: Number })
+  size: number;
 
-  @ApiPropertyOptional({ type: Number })
-  difficulty?: number;
+  @ApiProperty({ type: Number })
+  difficulty: number;
 
-  @ApiPropertyOptional({ type: Number })
-  terrain?: number;
+  @ApiProperty({ type: Number })
+  terrain: number;
 }
 
 export class ProfileResDto {
@@ -56,6 +56,9 @@ export class TerryResponseDto extends BaseDbResponseDto {
   description?: string;
 
   @ApiPropertyOptional({ type: String })
+  address?: string;
+
+  @ApiPropertyOptional({ type: String })
   hint?: string;
 
   @ApiProperty({ type: Boolean })
@@ -70,8 +73,8 @@ export class TerryResponseDto extends BaseDbResponseDto {
   @ApiProperty({ type: TerryLocationResDto })
   location: TerryLocationResDto;
 
-  @ApiPropertyOptional({ type: TerryMetadataResDto })
-  metadata?: TerryMetadataResDto;
+  @ApiProperty({ type: TerryMetadataResDto })
+  metadata: TerryMetadataResDto;
 
   @ApiPropertyOptional({ type: ProfileResDto })
   profile?: ProfileResDto;
@@ -93,4 +96,7 @@ export class TerryResponseDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ type: Boolean })
   checkedIn?: boolean;
+
+  @ApiPropertyOptional({ type: String })
+  path?: string;
 }

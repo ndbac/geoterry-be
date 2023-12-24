@@ -9,6 +9,7 @@ import { Request } from 'express';
 
 export enum CollectionName {
   ACCOUNTS = 'accounts',
+  ACCOUNT_METADATA = 'account-metadatas',
   PROFILES = 'profiles',
   TERRIES = 'terries',
   TERRY_CATEGORIES = 'terry-categories',
@@ -20,6 +21,7 @@ export enum CollectionName {
   MESSAGES = 'messages',
   TERRY_USER_MAPPINGS = 'terry-user-mappings',
   TERRY_USER_PATHS = 'terry-user-paths',
+  APP_GLOBALS = 'app-globals',
 }
 
 export type PossiblyAsync<T> = T | Promise<T>;
@@ -79,6 +81,11 @@ export enum IamNamespace {
   GEOTERRY_ADMINS = 'geoterry-admins',
   GEOTERRY_BUILDERS = 'geoterry-builders',
   GEOTERRY_HUNTERS = 'geoterry-hunters',
+}
+
+export enum IAccountRole {
+  PARTNER = 'partner',
+  USER = 'user',
 }
 
 export enum EIdentifierType {

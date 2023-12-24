@@ -17,7 +17,7 @@ import {
   ETerryUserMappingOperation,
   TERRY_USER_MAPPING_ENDPOINT_CONFIG,
 } from './endpoint-config';
-import { ProfileAccessGuard } from 'src/guards/store-access.guard';
+import { ProfileAccessGuard } from 'src/guards/profile-access.guard';
 import { UpsertTerryUserMappingInputDto } from '../dto/terry-user-mapping.dto';
 
 @Controller('hunter/:profileId/terry/:terryId/terry-user-mapping')

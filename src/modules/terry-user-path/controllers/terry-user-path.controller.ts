@@ -18,7 +18,7 @@ import {
   ETerryUserPathOperation,
   TERRY_USER_PATH_ENDPOINT_CONFIG,
 } from './endpoint-config';
-import { ProfileAccessGuard } from 'src/guards/store-access.guard';
+import { ProfileAccessGuard } from 'src/guards/profile-access.guard';
 import { TerryUserPathInputDto } from '../dto/terry-user-path.dto';
 
 @Controller('hunter/:profileId/terry/:terryId/terry-user-path')
@@ -67,6 +67,6 @@ export class TerryUserPathController {
     @Param('profileId') profileId: string,
     @Param('terryId') terryId: string,
   ) {
-    return this.terryUserPathSvc.upsert(data, profileId, terryId);
+    return this.terryUserPathSvc.upsertPath(data, profileId, terryId);
   }
 }

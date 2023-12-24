@@ -24,8 +24,11 @@ export class TerryUserMappingService {
     return this.terryUserMappingRepo.updateOneOrCreate(
       { profileId, terryId },
       {
+        terryId,
+        profileId,
         ...(data.saved ? { saved: data.saved } : []),
         ...(data.favourite ? { favourite: data.favourite } : []),
+        ...(data.path ? { path: data.path } : []),
       },
     );
   }

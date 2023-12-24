@@ -7,26 +7,36 @@ import { DefaultSchemaOptions } from 'src/shared/mongoose/schema-option';
 
 @Schema({ _id: false })
 export class LastMsgDocument extends EmbeddedDocument {
-  @Prop({ required: false })
-  snippet: number;
+  @Prop({ required: true })
+  snippet: string;
 
-  @Prop({ required: false })
+  @Prop({ required: true })
   sentAt: Date;
 
-  @Prop({ required: false })
-  sentByRecipient: string;
+  @Prop({ required: true })
+  sentByProfileId: string;
+}
+
+@Schema({ _id: false })
+export class ParticipantDocument extends EmbeddedDocument {
+  @Prop({ required: true })
+  profileId: string;
+
+  @Prop({ required: true })
+  unreadMsgCnt: number;
 }
 
 @Schema(DefaultSchemaOptions)
 export class ConversationDocument extends BaseDocument {
   @Prop({
     type: LastMsgDocument.schema,
+    required: true,
   })
-  lastMsg?: LastMsgDocument;
+  lastMsg: LastMsgDocument;
 
-  @Prop({ type: String })
-  recipientId: string;
+  @Prop({ type: [ParticipantDocument.schema] })
+  participants: ParticipantDocument[];
 
-  @Prop({ type: String })
-  unreadMsgCnt: number;
+  @Prop({ type: Number, default: 0 })
+  msgCount: number;
 }

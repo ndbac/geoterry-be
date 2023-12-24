@@ -1,6 +1,18 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ERoleRequestStatus } from 'src/modules/account/types';
 import { BaseDbResponseDto } from 'src/shared/common-DTOs';
-import { LanguageCode } from 'src/shared/types';
+import { IAccountRole, LanguageCode } from 'src/shared/types';
+
+export class ProfileLastLocationResDto {
+  @ApiProperty({ type: Number })
+  latitude: number;
+
+  @ApiProperty({ type: Number })
+  longitude: number;
+
+  @ApiProperty({ type: Date })
+  updatedAt: Date;
+}
 
 export class ProfileResDto extends BaseDbResponseDto {
   @ApiProperty({ type: String })
@@ -29,4 +41,24 @@ export class ProfileResDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ type: Number })
   rewardPoints: number;
+
+  @ApiPropertyOptional({ type: Number })
+  totalCheckedinTerry: number;
+
+  @ApiProperty({ enum: IAccountRole })
+  role: IAccountRole;
+
+  @ApiPropertyOptional({ enum: ERoleRequestStatus })
+  roleRequestingStatus?: ERoleRequestStatus;
+
+  @ApiPropertyOptional({ enum: IAccountRole })
+  roleRequesting?: IAccountRole;
+
+  @ApiPropertyOptional({ type: ProfileLastLocationResDto })
+  lastLocation?: ProfileLastLocationResDto;
+}
+
+export class UserGetProfileNearbyResDto {
+  @ApiProperty({ type: Number })
+  profileId: number;
 }

@@ -26,7 +26,7 @@ import {
   TerryCheckinInputDto,
   UpdateTerryCheckinInputDto,
 } from '../dto/terry-checkin.dto';
-import { ProfileAccessGuard } from 'src/guards/store-access.guard';
+import { ProfileAccessGuard } from 'src/guards/profile-access.guard';
 import {
   FilterTerryCheckinDto,
   ReadTerryCheckinQueryDto,

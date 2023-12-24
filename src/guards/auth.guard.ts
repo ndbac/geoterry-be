@@ -3,6 +3,7 @@ import { IRequestWithUserCtx } from './../shared/types';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthEndpointDto } from 'src/decorators/auth-endpoint.decorator';
+import _ from 'lodash';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -14,6 +15,22 @@ export class AuthGuard implements CanActivate {
       ctx.getHandler(),
     );
     const authReq = ctx.switchToHttp().getRequest<IRequestWithUserCtx>();
+
+    if (
+      authMetadata?.rolesRequired &&
+      !_.isEmpty(authMetadata?.rolesRequired)
+    ) {
+      let shouldAllow = true;
+      authMetadata.rolesRequired.forEach((roleRequired) => {
+        if (
+          authReq.user.namespace === roleRequired.namespace &&
+          !roleRequired.roles.includes(authReq.user.role)
+        ) {
+          shouldAllow = false;
+        }
+      });
+      if (!shouldAllow) return shouldAllow;
+    }
 
     return (
       !authMetadata ||

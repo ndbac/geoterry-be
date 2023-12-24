@@ -25,26 +25,26 @@ export class TerryLocationDto {
 }
 
 export class TerryMetadataDto {
-  @ApiPropertyOptional({ type: Number })
+  @ApiProperty({ type: Number })
   @IsNumber()
   @Min(1)
   @Max(5)
-  @IsOptional()
-  size?: number;
+  @IsNotEmpty()
+  size: number;
 
-  @ApiPropertyOptional({ type: Number })
+  @ApiProperty({ type: Number })
   @IsNumber()
   @Min(1)
   @Max(5)
-  @IsOptional()
-  difficulty?: number;
+  @IsNotEmpty()
+  difficulty: number;
 
-  @ApiPropertyOptional({ type: Number })
+  @ApiProperty({ type: Number })
   @IsNumber()
   @Min(1)
   @Max(5)
   @IsOptional()
-  terrain?: number;
+  terrain: number;
 }
 
 export class TerryInputDto {
@@ -62,6 +62,11 @@ export class TerryInputDto {
   @IsString()
   @IsOptional()
   hint?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  address?: string;
 
   @ApiProperty({ type: Boolean })
   @IsBoolean()
@@ -84,11 +89,34 @@ export class TerryInputDto {
   @ValidateNested()
   location: TerryLocationDto;
 
-  @ApiPropertyOptional({ type: TerryMetadataDto })
-  @IsOptional()
+  @ApiProperty({ type: TerryMetadataDto })
+  @IsNotEmpty()
   @Type(() => TerryMetadataDto)
   @ValidateNested()
-  metadata?: TerryMetadataDto;
+  metadata: TerryMetadataDto;
+}
+
+export class TerryUpdateMetadataDto {
+  @ApiPropertyOptional({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  @IsOptional()
+  size?: number;
+
+  @ApiPropertyOptional({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  @IsOptional()
+  difficulty?: number;
+
+  @ApiPropertyOptional({ type: Number })
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  @IsOptional()
+  terrain?: number;
 }
 
 export class TerryUpdateInputDto {
@@ -128,9 +156,9 @@ export class TerryUpdateInputDto {
   @ValidateNested()
   location?: TerryLocationDto;
 
-  @ApiPropertyOptional({ type: TerryMetadataDto })
+  @ApiPropertyOptional({ type: TerryUpdateMetadataDto })
   @IsOptional()
-  @Type(() => TerryMetadataDto)
+  @Type(() => TerryUpdateMetadataDto)
   @ValidateNested()
-  metadata?: TerryMetadataDto;
+  metadata?: TerryUpdateMetadataDto;
 }

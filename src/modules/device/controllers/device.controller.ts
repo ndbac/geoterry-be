@@ -16,7 +16,7 @@ import { AuthEndpoint } from 'src/decorators/auth-endpoint.decorator';
 import { CreateOrUpdateDeviceInputDto } from '../dto/device.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { I18nExceptionFilter } from 'src/filters/i18n-exception.filter';
-import { ProfileAccessGuard } from 'src/guards/store-access.guard';
+import { ProfileAccessGuard } from 'src/guards/profile-access.guard';
 
 @Controller('user/:profileId/device')
 @ApiTags('user.device')

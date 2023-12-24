@@ -15,7 +15,7 @@ import { EndpointConfig } from 'src/decorators/endpoint-config.decorator';
 import { I18nExceptionFilter } from 'src/filters/i18n-exception.filter';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { IPagination, IamNamespace } from 'src/shared/types';
-import { ProfileAccessGuard } from 'src/guards/store-access.guard';
+import { ProfileAccessGuard } from 'src/guards/profile-access.guard';
 import { ETerryOperation, TERRY_ENDPOINT_CONFIG } from './endpoint-config';
 import {
   GetTerryByIdQuery,

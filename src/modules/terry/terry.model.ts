@@ -43,6 +43,9 @@ export class TerryDocument extends BaseDocument {
   @Prop({ type: String })
   hint?: string;
 
+  @Prop({ type: String })
+  address?: string;
+
   @Prop({ type: [String] })
   photoUrls?: string[];
 

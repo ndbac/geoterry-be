@@ -15,6 +15,7 @@ import {
   CreateAccountDto,
   SendVerificationDto,
 } from '../dto/create-account.dto';
+import { SwitchRoleInputDto, SwitchRoleResDto } from '../dto/account.dto';
 
 export enum EAccountOperation {
   CREATE_ACCOUNT = 'createAccount',
@@ -25,6 +26,7 @@ export enum EAccountOperation {
   ACCOUNT_UPDATE_CREDENTIALS = 'accountUpdateCredentials',
   VERIFY_ACCOUNT_RECOVERY_OTP = 'verifyAccountRecoveryOTP',
   TEAR_DOWN_ACCOUNT = 'teardownAccount',
+  SWITCH_ROLE = 'switchRole',
 }
 
 export const ACCOUNT_ENDPOINT_CONFIG: Record<
@@ -126,6 +128,19 @@ export const ACCOUNT_ENDPOINT_CONFIG: Record<
     summary: 'Tear down account',
     responses: [
       {
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [EAccountOperation.SWITCH_ROLE]: {
+    operationId: EAccountOperation.SWITCH_ROLE,
+    summary: 'Switch account role',
+    body: {
+      type: SwitchRoleInputDto,
+    },
+    responses: [
+      {
+        type: SwitchRoleResDto,
         status: HttpStatus.OK,
       },
     ],

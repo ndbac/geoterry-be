@@ -5,6 +5,9 @@ import { BaseRepository } from 'src/shared/mongoose/base.repository';
 import { CollectionName } from 'src/shared/types';
 import { TerryUserPathDocument } from './terry-user-path.model';
 
+/**
+ * @deprecated since move to use terry-user-mapping
+ */
 @Injectable()
 export class TerryUserPathRepository
   extends BaseRepository<TerryUserPathDocument>

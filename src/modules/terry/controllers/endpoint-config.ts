@@ -176,6 +176,11 @@ export const TERRY_ENDPOINT_CONFIG: Record<
         type: Number,
         required: false,
       },
+      {
+        name: 'includeUserPath',
+        type: Boolean,
+        required: false,
+      },
     ],
     params: [
       {

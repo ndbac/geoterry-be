@@ -31,6 +31,7 @@ export class UserMiddleware implements NestMiddleware {
           userId: account.id,
           identifier: account.identifier,
           identifierType: account.identifierType,
+          role: account.role,
         };
       }
     }

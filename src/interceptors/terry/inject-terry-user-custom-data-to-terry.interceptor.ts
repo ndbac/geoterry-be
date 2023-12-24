@@ -25,11 +25,15 @@ export class InjectTerryUserCustomDataInterceptor implements NestInterceptor {
     >,
   ) {
     const profileId = ctx.switchToHttp().getRequest().params?.profileId;
+    const shouldInjectPath =
+      ctx.switchToHttp().getRequest().query['includeUserPath'] === 'true';
     return next
       .handle()
       .pipe(
         mergeMap((data) =>
-          from(this.injectData(convertObject(data), profileId)),
+          from(
+            this.injectData(convertObject(data), profileId, shouldInjectPath),
+          ),
         ),
       );
   }
@@ -38,7 +42,8 @@ export class InjectTerryUserCustomDataInterceptor implements NestInterceptor {
     data:
       | Document2Interface<TerryDocument>
       | Document2Interface<TerryDocument>[],
-    profileId,
+    profileId: string,
+    shouldInjectPath?: boolean,
   ) {
     const terryUserMappingDataMappedByTerryId =
       await this.getTerryUserMappingMappedByTerryId(
@@ -47,10 +52,18 @@ export class InjectTerryUserCustomDataInterceptor implements NestInterceptor {
       );
     if (Array.isArray(data)) {
       data.forEach((terry) => {
-        this.addData(terry, terryUserMappingDataMappedByTerryId[terry.id]);
+        this.addData(
+          terry,
+          terryUserMappingDataMappedByTerryId[terry.id],
+          shouldInjectPath,
+        );
       });
     } else {
-      this.addData(data, terryUserMappingDataMappedByTerryId[data.id]);
+      this.addData(
+        data,
+        terryUserMappingDataMappedByTerryId[data.id],
+        shouldInjectPath,
+      );
     }
     return data;
   }
@@ -58,6 +71,7 @@ export class InjectTerryUserCustomDataInterceptor implements NestInterceptor {
   addData(
     terry: Document2Interface<TerryDocument>,
     terryUserMappingData: TerryUserMappingDocument,
+    shouldInjectPath?: boolean,
   ) {
     if (!terryUserMappingData) return;
     if (terryUserMappingData.favourite) {
@@ -68,6 +82,9 @@ export class InjectTerryUserCustomDataInterceptor implements NestInterceptor {
     }
     if (terryUserMappingData.checkedIn) {
       (terry as any).checkedIn = terryUserMappingData.checkedIn;
+    }
+    if (terryUserMappingData.path && shouldInjectPath) {
+      (terry as any).path = terryUserMappingData.path;
     }
   }
 

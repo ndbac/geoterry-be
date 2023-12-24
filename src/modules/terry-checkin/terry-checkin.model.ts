@@ -38,4 +38,7 @@ export class TerryCheckinDocument extends BaseDocument {
     type: LocationDocument.schema,
   })
   location: LocationDocument;
+
+  @Prop({ required: true })
+  isFound: boolean;
 }

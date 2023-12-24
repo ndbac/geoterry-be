@@ -1,5 +1,5 @@
 import { throwStandardError } from './../../../errors/helpers';
-import { IamNamespace } from './../../../shared/types';
+import { IAccountRole, IamNamespace } from './../../../shared/types';
 import {
   Injectable,
   BadRequestException,
@@ -34,6 +34,9 @@ import {
   ACCOUNT_RECOVERY_CODE_LENGTH,
   REFRESH_TOKEN_LENGTH,
 } from '../constants';
+import { SwitchRoleInputDto } from '../dto/account.dto';
+import { AccountMetadataRepository } from '../account-metadata.repository';
+import { ERoleRequestStatus } from '../types';
 
 @Injectable()
 export class AccountService {
@@ -42,6 +45,7 @@ export class AccountService {
     private readonly twilioService: TwilioService,
     private readonly bcryptService: BcryptService,
     private readonly jwtService: JwtService,
+    private readonly accountMetadataRepo: AccountMetadataRepository,
   ) {}
 
   async sendVerification(input: SendVerificationDto) {
@@ -264,6 +268,46 @@ export class AccountService {
 
   async teardown(userId: string) {
     await this.accountRepo.deleteById(userId);
+  }
+
+  async switchRole(userId: string, input: SwitchRoleInputDto) {
+    return this.accountRepo.withTransaction(async (session) => {
+      const account = await this.accountRepo.findByIdOrFail(userId, {
+        session,
+      });
+      if (account.role !== input.role) {
+        let roleRequestStatus: ERoleRequestStatus = ERoleRequestStatus.PENDING;
+        if (input.role === IAccountRole.USER) {
+          await this.accountRepo.updateById(
+            userId,
+            {
+              role: input.role,
+            },
+            { session },
+          );
+          roleRequestStatus = ERoleRequestStatus.ACCEPTED;
+        }
+        await this.accountMetadataRepo.updateOneOrCreate(
+          { userId },
+          {
+            userId,
+            roleRequest: {
+              reason: input.reason,
+              role: input.role,
+              requestedAt: Date.now(),
+              status: roleRequestStatus,
+            },
+          },
+          { session },
+        );
+        return {
+          status: roleRequestStatus,
+        };
+      }
+      return {
+        status: ERoleRequestStatus.ACCEPTED,
+      };
+    });
   }
 
   private async isEligibleForCreateAccount(input: CreateAccountDto) {

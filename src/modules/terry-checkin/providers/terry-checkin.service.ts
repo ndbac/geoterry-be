@@ -20,6 +20,8 @@ import { TerryUserMappingRepository } from 'src/modules/terry-user-mapping/terry
 import { ClientSession } from 'mongoose';
 import { ProfileRepository } from 'src/modules/profile/profile.repository';
 import { ETerryCheckedInFindAspects } from '../types';
+import { TerryCheckinDocument } from '../terry-checkin.model';
+import { convertObject } from 'src/shared/mongoose/helpers';
 
 @Injectable()
 export class TerryCheckinService {
@@ -46,7 +48,7 @@ export class TerryCheckinService {
       if (distance > maxDistance) {
         return throwStandardError(ErrorCode.OUT_OF_DISTANCE);
       }
-      if (data.rate) {
+      if (data.rate && data.isFound) {
         await this.updateTerryUserMapping(
           data.rate,
           terry.id,
@@ -56,13 +58,19 @@ export class TerryCheckinService {
       }
       await this.profileRepo.updateById(profileId, {
         $inc: {
-          rewardPoints:
-            (terry.metadata?.size || 0) +
-            (terry.metadata?.terrain || 0) +
-            (terry.metadata?.difficulty || 0),
+          rewardPoints: data.isFound
+            ? (terry.metadata?.size || 0) +
+              (terry.metadata?.terrain || 0) +
+              (terry.metadata?.difficulty || 0)
+            : 0,
+          totalCheckedinTerry: data.isFound ? 1 : 0,
         },
       });
-      return this.terryCheckinRepo.create({ profileId, ...data }, { session });
+      return this.terryCheckinRepo.updateOneOrCreate(
+        { profileId, terryId: data.terryId },
+        { profileId, ...data },
+        { session },
+      );
     });
   }
 
@@ -99,13 +107,26 @@ export class TerryCheckinService {
     profileId: string,
     query: ReadTerryCheckinQueryDto,
   ) {
+    let terryCheckin: TerryCheckinDocument | undefined = undefined;
     if (query.findBy === ETerryCheckedInFindAspects.TERRY_ID) {
-      return this.terryCheckinRepo.findOneOrFail({
+      terryCheckin = await this.terryCheckinRepo.findOneOrFail({
         terryId: checkinId,
         profileId,
       });
+    } else {
+      terryCheckin = await this.terryCheckinRepo.findOneOrFail({
+        _id: checkinId,
+        profileId,
+      });
     }
-    return this.terryCheckinRepo.findOneOrFail({ _id: checkinId, profileId });
+    if (query.includeUserPath) {
+      const mapping = await this.terryUserMappingRepo.findOne({
+        terryId: terryCheckin.terryId,
+        profileId,
+      });
+      return { ...convertObject(terryCheckin), path: mapping?.path };
+    }
+    return terryCheckin;
   }
 
   async delete(checkinId: string, profileId: string) {

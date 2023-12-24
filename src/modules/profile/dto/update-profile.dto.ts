@@ -1,7 +1,9 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEnum,
+  IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -51,4 +53,16 @@ export class UpdateProfileReqDto {
   @IsOptional()
   @IsEnum(LanguageCode)
   languageCode?: LanguageCode;
+}
+
+export class UpdateProfileLocationReqDto {
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @IsNotEmpty()
+  latitude: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  @IsNotEmpty()
+  longitude: number;
 }

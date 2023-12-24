@@ -18,7 +18,7 @@ import {
   TERRY_REPORT_ENDPOINT_CONFIG,
 } from './endpoint-config';
 import { TerryReportInputDto } from '../dto/terry-report.dto';
-import { ProfileAccessGuard } from 'src/guards/store-access.guard';
+import { ProfileAccessGuard } from 'src/guards/profile-access.guard';
 
 @Controller('hunter/:profileId/terry-report')
 @ApiTags('hunter.terryReport')
