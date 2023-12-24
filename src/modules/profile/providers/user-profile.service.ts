@@ -14,7 +14,7 @@ import { ERoleRequestStatus } from 'src/modules/account/types';
 import { MongoLocationType } from 'src/shared/mongoose/types';
 import { UserGetProfileNearbyReqDto } from '../dto/profile.dto';
 import { PROFILE_NEARBY_MAX_DISTANCE_IN_METER_DEFAULT } from 'src/modules/terry/constants';
-import { isAfter, sub } from 'date-fns';
+import { sub } from 'date-fns';
 import { RtdbService } from 'src/modules/adapters/firebase/rtdb.provider';
 import { getLocationPath } from 'src/shared/firebase.helpers';
 
@@ -181,21 +181,16 @@ export class UserProfileService {
               $maxDistance: PROFILE_NEARBY_MAX_DISTANCE_IN_METER_DEFAULT,
             },
           },
+          userId: { $nin: [userId] },
+          'lastLocation.updatedAt': {
+            // only return players that have updated their location in the last 5 minutes
+            // that mean thoese only are online
+            $gte: sub(new Date(), { minutes: 5 }),
+          },
         },
         { session },
       );
-      return profiles
-        .filter(
-          (profile) =>
-            profile.lastLocation &&
-            isAfter(
-              profile.lastLocation.updatedAt,
-              // only return profiles that have been updated location within 5 minutes
-              sub(new Date(), { minutes: 15 }),
-            ) &&
-            profile.userId !== userId,
-        )
-        .map((profile) => ({ profileId: profile.id }));
+      return profiles.map((profile) => ({ profileId: profile.id }));
     });
   }
 
