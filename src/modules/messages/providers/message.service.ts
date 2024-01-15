@@ -62,6 +62,7 @@ export class MessageService {
   async sendMessage(profileId: string, input: SendMessageInputDto) {
     return this.messageRepo.withTransaction(async (session) => {
       let conversation: ConversationDocument | undefined = undefined;
+      let isNewConversation = false;
       // Send to old conversation
       if (input.conversationId) {
         conversation = await this.conversationRepo.findByIdOrFail(
@@ -128,6 +129,7 @@ export class MessageService {
           },
           { session },
         );
+        isNewConversation = true;
       }
 
       if (_.isNil(conversation)) return;
@@ -152,13 +154,13 @@ export class MessageService {
         ..._.omit(convertObject(message), ['createdAt', 'updatedAt', '_id']),
         chatServiceId: message.id,
       } as any;
-      if (input.recipientId) {
+      if (input.recipientId && isNewConversation) {
         const sender = await this.profileRepo.findByIdOrFail(profileId, {
           session,
         });
         dataToSendToRtdb.sender = {
           displayName: sender.displayName,
-          logoUrl: sender.logoUrl,
+          ...(sender.logoUrl ? { logoUrl: sender.logoUrl } : {}),
         };
       }
       await this.rtdbSvc.create(
