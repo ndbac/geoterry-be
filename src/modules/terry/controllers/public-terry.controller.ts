@@ -25,6 +25,7 @@ import { InjectCategoriesToTerryInterceptor } from 'src/interceptors/terry/injec
 import { InjectProfileToTerryInterceptor } from 'src/interceptors/terry/inject-profile-to-terry.interceptor';
 import { InjectRatingToTerryInterceptor } from 'src/interceptors/terry/inject-rating-to-terry.interceptor';
 import { FilterTerriesByRatingInterceptor } from 'src/interceptors/terry/filter-terries-by-rating.interceptor';
+import { MaskedTerrySensitiveInfoInterceptor } from 'src/interceptors/terry/masked-terry-sensitive-info.interceptor';
 
 @Controller('public/terry')
 @ApiTags('public.terry')
@@ -38,6 +39,7 @@ export class PublicTerryController {
     InjectCategoriesToTerryInterceptor,
     FilterTerriesByRatingInterceptor,
     InjectRatingToTerryInterceptor,
+    MaskedTerrySensitiveInfoInterceptor,
     NormalizedGeoJsonPointInterceptor,
     PaginationInterceptor,
   )
@@ -55,6 +57,7 @@ export class PublicTerryController {
     InjectProfileToTerryInterceptor,
     InjectRatingToTerryInterceptor,
     InjectCategoriesToTerryInterceptor,
+    MaskedTerrySensitiveInfoInterceptor,
     NormalizedGeoJsonPointInterceptor,
   )
   @Get(':id')

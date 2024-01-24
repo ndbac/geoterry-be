@@ -33,6 +33,7 @@ import { InjectRatingToTerryInterceptor } from 'src/interceptors/terry/inject-ra
 import { FilterTerriesByRatingInterceptor } from 'src/interceptors/terry/filter-terries-by-rating.interceptor';
 import { InjectTerryUserCustomDataInterceptor } from 'src/interceptors/terry/inject-terry-user-custom-data-to-terry.interceptor';
 import { HunterTerryService } from '../providers/hunter-terry.service';
+import { MaskedTerrySensitiveInfoInterceptor } from 'src/interceptors/terry/masked-terry-sensitive-info.interceptor';
 
 @Controller('hunter/:profileId/terry')
 @ApiTags('hunter.terry')
@@ -56,6 +57,7 @@ export class HunterTerryController {
     InjectTerryUserCustomDataInterceptor,
     FilterTerriesByRatingInterceptor,
     InjectRatingToTerryInterceptor,
+    MaskedTerrySensitiveInfoInterceptor,
     NormalizedGeoJsonPointInterceptor,
     PaginationInterceptor,
   )
@@ -81,6 +83,7 @@ export class HunterTerryController {
     InjectTerryUserCustomDataInterceptor,
     InjectRatingToTerryInterceptor,
     InjectCategoriesToTerryInterceptor,
+    MaskedTerrySensitiveInfoInterceptor,
     NormalizedGeoJsonPointInterceptor,
   )
   @Get(':id')

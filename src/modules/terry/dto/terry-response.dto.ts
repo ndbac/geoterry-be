@@ -64,6 +64,9 @@ export class TerryResponseDto extends BaseDbResponseDto {
   @ApiProperty({ type: Boolean })
   isAvailable: boolean;
 
+  @ApiPropertyOptional({ type: Boolean })
+  isOfficial?: boolean;
+
   @ApiPropertyOptional({ type: [String] })
   photoUrls?: string[];
 

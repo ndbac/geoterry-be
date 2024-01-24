@@ -55,6 +55,12 @@ export class TerryDocument extends BaseDocument {
   @Prop({ required: true })
   isAvailable: boolean;
 
+  @Prop({ type: Boolean })
+  isOfficial?: boolean;
+
+  @Prop({ type: String })
+  code?: string;
+
   @Prop({
     type: LocationDocument.schema,
   })

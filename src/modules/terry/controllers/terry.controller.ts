@@ -32,6 +32,7 @@ import { InjectProfileToTerryInterceptor } from 'src/interceptors/terry/inject-p
 import { InjectRatingToTerryInterceptor } from 'src/interceptors/terry/inject-rating-to-terry.interceptor';
 import { FilterTerriesByRatingInterceptor } from 'src/interceptors/terry/filter-terries-by-rating.interceptor';
 import { InjectTerryUserCustomDataInterceptor } from 'src/interceptors/terry/inject-terry-user-custom-data-to-terry.interceptor';
+import { MaskedTerrySensitiveInfoInterceptor } from 'src/interceptors/terry/masked-terry-sensitive-info.interceptor';
 
 @Controller('builder/:profileId/terry')
 @ApiTags('builder.terry')
@@ -75,7 +76,10 @@ export class TerryController {
       },
     ],
   })
-  @UseInterceptors(NormalizedGeoJsonPointInterceptor)
+  @UseInterceptors(
+    MaskedTerrySensitiveInfoInterceptor,
+    NormalizedGeoJsonPointInterceptor,
+  )
   @Put(':id')
   update(@Body() data: TerryInputDto, @Param('id') terryId: string) {
     return this.terryService.updateTerry(data, terryId);
@@ -95,7 +99,10 @@ export class TerryController {
       },
     ],
   })
-  @UseInterceptors(NormalizedGeoJsonPointInterceptor)
+  @UseInterceptors(
+    MaskedTerrySensitiveInfoInterceptor,
+    NormalizedGeoJsonPointInterceptor,
+  )
   @Delete(':id')
   delete(@Param('id') terryId: string, @Param('profileId') profileId: string) {
     return this.terryService.deleteTerry(terryId, profileId);
@@ -121,6 +128,7 @@ export class TerryController {
     InjectTerryUserCustomDataInterceptor,
     FilterTerriesByRatingInterceptor,
     InjectRatingToTerryInterceptor,
+    MaskedTerrySensitiveInfoInterceptor,
     NormalizedGeoJsonPointInterceptor,
     PaginationInterceptor,
   )
@@ -153,6 +161,7 @@ export class TerryController {
     InjectTerryUserCustomDataInterceptor,
     InjectRatingToTerryInterceptor,
     InjectCategoriesToTerryInterceptor,
+    MaskedTerrySensitiveInfoInterceptor,
     NormalizedGeoJsonPointInterceptor,
   )
   @Get(':id')
