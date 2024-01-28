@@ -45,7 +45,7 @@ export class TerryCheckinService {
         latitude: terry.location.coordinates[1],
         longitude: terry.location.coordinates[0],
       });
-      if (distance > maxDistance) {
+      if (distance > maxDistance && data.isFound) {
         return throwStandardError(ErrorCode.OUT_OF_DISTANCE);
       }
       if (data.rate && data.isFound) {
