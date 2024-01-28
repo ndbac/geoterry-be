@@ -59,4 +59,21 @@ export class ConversationController {
   ) {
     return this.conversationSvc.filterConversations(profileId, pagination);
   }
+
+  @EndpointConfig(
+    CONVERSATION_ENDPOINT_CONFIG[
+      EConversationOperation.HUNTER_FILTER_CONVERSATION_STAT
+    ],
+  )
+  @AuthEndpoint({
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+  })
+  @Post('filter-stat')
+  filterStat(@Param('profileId') profileId: string) {
+    return this.conversationSvc.filterConversationStat(profileId);
+  }
 }

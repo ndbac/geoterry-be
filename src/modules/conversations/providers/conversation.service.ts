@@ -24,4 +24,22 @@ export class ConversationService {
       headers: getPaginationHeaders(pagination, total),
     };
   }
+
+  async filterConversationStat(profileId: string) {
+    const totalUnreadConv = await this.conversationRepo.countWithFindOption({
+      participants: {
+        $elemMatch: {
+          profileId,
+          unreadMsgCnt: { $gt: 0 },
+        },
+      },
+    });
+    const total = await this.conversationRepo.countWithFindOption({
+      'participants.profileId': { $in: [profileId] },
+    });
+    return {
+      totalConversationCnt: total,
+      unreadConversationCnt: totalUnreadConv,
+    };
+  }
 }

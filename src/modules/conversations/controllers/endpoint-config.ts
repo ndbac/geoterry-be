@@ -1,9 +1,13 @@
 import { HttpStatus } from '@nestjs/common';
 import { IEndpointConfiguration } from 'src/shared/types';
-import { ConversationResDto } from '../dto/conversation.dto';
+import {
+  ConversationResDto,
+  ConversationStatResDto,
+} from '../dto/conversation.dto';
 
 export enum EConversationOperation {
   HUNTER_FILTER_CONVERSATIONS = 'hunterFilterConversations',
+  HUNTER_FILTER_CONVERSATION_STAT = 'hunterFilterConversationStat',
 }
 
 export const CONVERSATION_ENDPOINT_CONFIG: Record<
@@ -28,6 +32,16 @@ export const CONVERSATION_ENDPOINT_CONFIG: Record<
     responses: [
       {
         type: [ConversationResDto],
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [EConversationOperation.HUNTER_FILTER_CONVERSATION_STAT]: {
+    operationId: EConversationOperation.HUNTER_FILTER_CONVERSATION_STAT,
+    summary: 'Hunter filter conversation stat',
+    responses: [
+      {
+        type: ConversationStatResDto,
         status: HttpStatus.OK,
       },
     ],

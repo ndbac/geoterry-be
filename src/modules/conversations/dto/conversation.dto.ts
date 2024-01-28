@@ -40,3 +40,11 @@ export class ConversationResDto extends BaseDbResponseDto {
   @ApiPropertyOptional({ type: [MessageResDto] })
   messages?: MessageResDto[];
 }
+
+export class ConversationStatResDto {
+  @ApiProperty({ type: Number })
+  totalConversationCnt: number;
+
+  @ApiProperty({ type: Number })
+  unreadConversationCnt: number;
+}
