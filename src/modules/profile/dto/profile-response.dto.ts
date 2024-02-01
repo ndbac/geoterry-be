@@ -56,6 +56,9 @@ export class ProfileResDto extends BaseDbResponseDto {
 
   @ApiPropertyOptional({ type: ProfileLastLocationResDto })
   lastLocation?: ProfileLastLocationResDto;
+
+  @ApiPropertyOptional({ type: String })
+  conversationId?: string;
 }
 
 export class UserGetProfileNearbyResDto {

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   UploadedFile,
@@ -144,5 +145,23 @@ export class UserProfileController {
     @Body() input: UserGetProfileNearbyReqDto,
   ) {
     return this.userProfileSvc.getProfileNearby(userId, input);
+  }
+
+  @EndpointConfig(
+    ACCOUNT_ENDPOINT_CONFIG[EAccountOperation.USER_READ_OTHER_PROFILE],
+  )
+  @AuthEndpoint({
+    namespaces: [
+      IamNamespace.GEOTERRY_ADMINS,
+      IamNamespace.GEOTERRY_BUILDERS,
+      IamNamespace.GEOTERRY_HUNTERS,
+    ],
+  })
+  @Get('other/:profileId')
+  async readOtherProfile(
+    @User('userId') userId: string,
+    @Param('profileId') profileId: string,
+  ) {
+    return this.userProfileSvc.readOtherProfile(userId, profileId);
   }
 }

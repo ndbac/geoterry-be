@@ -16,6 +16,7 @@ export enum EAccountOperation {
   USER_CREATE_PROFILE = 'userCreateProfile',
   USER_UPDATE_PROFILE = 'userUpdateProfile',
   USER_READ_PROFILE = 'userReadProfile',
+  USER_READ_OTHER_PROFILE = 'userReadOtherProfile',
   USER_UPLOAD_PHOTO = 'userUploadPhoto',
   PUBLIC_READ_PROFILE = 'publicReadProfile',
   USER_UPDATE_PROFILE_LOCATION = 'userUpdateProfileLocation',
@@ -55,6 +56,21 @@ export const ACCOUNT_ENDPOINT_CONFIG: Record<
   [EAccountOperation.USER_READ_PROFILE]: {
     operationId: EAccountOperation.USER_READ_PROFILE,
     summary: 'User read profile',
+    responses: [
+      {
+        type: ProfileResDto,
+        status: HttpStatus.OK,
+      },
+    ],
+  },
+  [EAccountOperation.USER_READ_OTHER_PROFILE]: {
+    operationId: EAccountOperation.USER_READ_OTHER_PROFILE,
+    summary: 'User read other profile',
+    params: [
+      {
+        name: 'profileId',
+      },
+    ],
     responses: [
       {
         type: ProfileResDto,

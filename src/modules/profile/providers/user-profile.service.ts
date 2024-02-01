@@ -1,5 +1,5 @@
 import { convertObject } from 'src/shared/mongoose/helpers';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   UpdateProfileLocationReqDto,
   UpdateProfileReqDto,
@@ -17,6 +17,7 @@ import { PROFILE_NEARBY_MAX_DISTANCE_IN_METER_DEFAULT } from 'src/modules/terry/
 import { sub } from 'date-fns';
 import { RtdbService } from 'src/modules/adapters/firebase/rtdb.provider';
 import { getLocationPath } from 'src/shared/firebase.helpers';
+import { ConversationRepository } from 'src/modules/conversations/conversations.repository';
 
 @Injectable()
 export class UserProfileService {
@@ -25,6 +26,7 @@ export class UserProfileService {
     private readonly acccountRepo: AccountRepository,
     private readonly accountMetadataRepo: AccountMetadataRepository,
     private readonly rtdbSvc: RtdbService,
+    private readonly conversationRepo: ConversationRepository,
   ) {}
 
   async onboardProfile(input: ICreateProfileData) {
@@ -192,6 +194,36 @@ export class UserProfileService {
       );
       return profiles.map((profile) => ({ profileId: profile.id }));
     });
+  }
+
+  async readOtherProfile(userId: string, otherId: string) {
+    const profile = await this.profileRepo.findOneOrFail({
+      userId,
+    });
+    if (otherId === profile.id) {
+      throw new BadRequestException({
+        message: 'Profile ID must be different with your profile ID',
+      });
+    }
+    const otherProfile = await this.profileRepo.findByIdOrFail(otherId);
+    const conversation = await this.conversationRepo.findOne({
+      participants: {
+        $all: [
+          {
+            $elemMatch: {
+              profileId: otherProfile.id,
+            },
+          },
+          {
+            $elemMatch: {
+              profileId: profile.id,
+            },
+          },
+        ],
+      },
+    });
+
+    return { ...convertObject(otherProfile), conversationId: conversation?.id };
   }
 
   private async asyncLocationToRtdb(

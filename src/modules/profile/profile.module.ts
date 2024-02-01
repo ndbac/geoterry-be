@@ -10,6 +10,7 @@ import { PublicProfileController } from './controllers/public-profile.controller
 import { PublicProfileService } from './providers/public-profile.service';
 import { AccountMetadataCoreModule } from '../account/account-metadata.core.module';
 import { FirebaseModule } from '../adapters/firebase/firebase-sdk.module';
+import { ConversationCoreModule } from '../conversations/conversations.core.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { FirebaseModule } from '../adapters/firebase/firebase-sdk.module';
     CommonModule,
     AwsSdkModule,
     FirebaseModule,
+    ConversationCoreModule,
   ],
   providers: [UserProfileService, PublicProfileService],
   controllers: [UserProfileController, PublicProfileController],
