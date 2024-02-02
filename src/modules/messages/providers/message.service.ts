@@ -23,6 +23,7 @@ export class MessageService {
 
   async getConvMessages(
     conversationId: string,
+    profileId: string,
     options: GetConversationMessagesOptions,
     pagination: IPagination,
   ) {
@@ -34,7 +35,24 @@ export class MessageService {
       if (options?.markAllAsRead) {
         await this.conversationRepo.updateById(
           conversation.id,
-          { unreadMsgCnt: 0 },
+          {
+            participants: [
+              {
+                profileId,
+                unreadMsgCnt: 0,
+              },
+              {
+                profileId:
+                  conversation.participants[0].profileId === profileId
+                    ? conversation.participants[1].profileId
+                    : conversation.participants[0].profileId,
+                unreadMsgCnt:
+                  (conversation.participants.find(
+                    (participant) => participant.profileId !== profileId,
+                  )?.unreadMsgCnt || 0) + 1,
+              },
+            ],
+          },
           { session },
         );
       }

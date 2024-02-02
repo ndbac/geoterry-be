@@ -51,10 +51,16 @@ export class MessageController {
   @Get('conversation/:conversationId/messages')
   filter(
     @Param('conversationId') conversationId: string,
+    @Param('profileId') profileId: string,
     @Query() options: GetConversationMessagesOptions,
     @Pagination() pagination: IPagination,
   ) {
-    return this.messageSvc.getConvMessages(conversationId, options, pagination);
+    return this.messageSvc.getConvMessages(
+      conversationId,
+      profileId,
+      options,
+      pagination,
+    );
   }
 
   @EndpointConfig(
