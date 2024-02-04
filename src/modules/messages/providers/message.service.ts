@@ -17,6 +17,7 @@ import { ClientSession } from 'mongoose';
 import { NotificationCompilers } from '../../notification/providers/noti-compiler';
 import { ENotificationEvent } from 'src/modules/notification/types';
 import { ISendNewConversationNotification } from '../types';
+import { errorLog } from 'src/shared/logger/logger.helpers';
 
 @Injectable()
 export class MessageService {
@@ -220,34 +221,41 @@ export class MessageService {
     payload: ISendNewConversationNotification,
     options?: { session?: ClientSession },
   ) => {
-    const device = await this.deviceRepo.findOne(
-      {
-        profileId: payload.recipientId,
-        enabled: true,
-      },
-      { session: options?.session },
-    );
+    try {
+      const device = await this.deviceRepo.findOne(
+        {
+          profileId: payload.recipientId,
+          enabled: true,
+        },
+        { session: options?.session },
+      );
 
-    if (!device) return;
+      if (!device) return;
 
-    const recipient = await this.profileRepo.findByIdOrFail(
-      payload.recipientId,
-      {
-        session: options?.session,
-      },
-    );
-    const notiPayload = this.notiCompilers.compile(
-      {
-        imageUrl: payload.imageUrl,
-        name: payload.name,
-        message: payload.message,
-      },
-      ENotificationEvent.ON_NEW_CONVERSATION,
-      recipient.languageCode,
-    );
-    await this.fcmService.sendPushNotification(device.fcmToken, notiPayload, {
-      senderProfileId: payload.senderProfileId,
-      conversationId: payload.conversationId,
-    });
+      const recipient = await this.profileRepo.findByIdOrFail(
+        payload.recipientId,
+        {
+          session: options?.session,
+        },
+      );
+      const notiPayload = this.notiCompilers.compile(
+        {
+          imageUrl: payload.imageUrl,
+          name: payload.name,
+          message: payload.message,
+        },
+        ENotificationEvent.ON_NEW_CONVERSATION,
+        recipient.languageCode,
+      );
+      await this.fcmService.sendPushNotification(device.fcmToken, notiPayload, {
+        senderProfileId: payload.senderProfileId,
+        conversationId: payload.conversationId,
+      });
+    } catch (error) {
+      errorLog(
+        error,
+        `Error when sending new conversation notification to recipient: ${payload.recipientId}!`,
+      );
+    }
   };
 }
