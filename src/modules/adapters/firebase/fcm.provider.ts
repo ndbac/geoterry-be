@@ -19,10 +19,17 @@ export class FcmService {
     private readonly fcm: Messaging,
   ) {}
 
-  async sendPushNotification(token: string, notification: INotification) {
+  async sendPushNotification(
+    token: string,
+    notification: INotification,
+    metadata?: {
+      [key: string]: string;
+    },
+  ) {
     const response = await this.fcm.send({
       token,
       notification,
+      data: metadata,
     });
     return response;
   }

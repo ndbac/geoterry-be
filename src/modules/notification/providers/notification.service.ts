@@ -14,10 +14,13 @@ export class NotificationService {
 
   async pushNotification(input: NotificationInputDto) {
     await this.notiHistoryRepo.withTransaction(async (session) => {
-      const device = await this.deviceRepo.findOneOrFail({
-        profileId: input.profileId,
-        enabled: true,
-      });
+      const device = await this.deviceRepo.findOneOrFail(
+        {
+          profileId: input.profileId,
+          enabled: true,
+        },
+        { session },
+      );
       await this.fcmService.sendPushNotification(
         device.fcmToken,
         input.metadata,

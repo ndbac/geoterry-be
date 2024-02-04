@@ -11,6 +11,12 @@ import { RtdbService } from 'src/modules/adapters/firebase/rtdb.provider';
 import { getMessagePath } from 'src/shared/firebase.helpers';
 import { convertObject } from 'src/shared/mongoose/helpers';
 import { ProfileRepository } from 'src/modules/profile/profile.repository';
+import { FcmService } from 'src/modules/adapters/firebase/fcm.provider';
+import { DeviceRepository } from 'src/modules/device/device.repository';
+import { ClientSession } from 'mongoose';
+import { NotificationCompilers } from '../../notification/providers/noti-compiler';
+import { ENotificationEvent } from 'src/modules/notification/types';
+import { ISendNewConversationNotification } from '../types';
 
 @Injectable()
 export class MessageService {
@@ -19,6 +25,9 @@ export class MessageService {
     private readonly conversationRepo: ConversationRepository,
     private readonly rtdbSvc: RtdbService,
     private readonly profileRepo: ProfileRepository,
+    private readonly fcmService: FcmService,
+    private readonly deviceRepo: DeviceRepository,
+    private readonly notiCompilers: NotificationCompilers,
   ) {}
 
   async getConvMessages(
@@ -116,9 +125,12 @@ export class MessageService {
           { session },
         );
       } else if (input.recipientId) {
-        const existed = await this.conversationRepo.exists({
-          'participants.profileId': { $all: [profileId, input.recipientId] },
-        });
+        const existed = await this.conversationRepo.exists(
+          {
+            'participants.profileId': { $all: [profileId, input.recipientId] },
+          },
+          { session },
+        );
         if (existed) {
           throw new BadRequestException({
             message: `Conververstaion with recipient ID: ${input.recipientId} is already initilized!`,
@@ -180,6 +192,17 @@ export class MessageService {
           displayName: sender.displayName,
           ...(sender.logoUrl ? { logoUrl: sender.logoUrl } : {}),
         };
+        await this.sendNewConversationNotification(
+          {
+            senderProfileId: message.senderId,
+            conversationId: message.conversationId,
+            recipientId: message.recipientId,
+            imageUrl: sender.logoUrl,
+            name: sender.displayName,
+            message: message.payload.text || message.payload.mediaUrl || '',
+          },
+          { session },
+        );
       }
       await this.rtdbSvc.create(
         getMessagePath(recipientId, ''),
@@ -192,4 +215,39 @@ export class MessageService {
       return message;
     });
   }
+
+  private readonly sendNewConversationNotification = async (
+    payload: ISendNewConversationNotification,
+    options?: { session?: ClientSession },
+  ) => {
+    const device = await this.deviceRepo.findOne(
+      {
+        profileId: payload.recipientId,
+        enabled: true,
+      },
+      { session: options?.session },
+    );
+
+    if (!device) return;
+
+    const recipient = await this.profileRepo.findByIdOrFail(
+      payload.recipientId,
+      {
+        session: options?.session,
+      },
+    );
+    const notiPayload = this.notiCompilers.compile(
+      {
+        imageUrl: payload.imageUrl,
+        name: payload.name,
+        message: payload.message,
+      },
+      ENotificationEvent.ON_NEW_CONVERSATION,
+      recipient.languageCode,
+    );
+    await this.fcmService.sendPushNotification(device.fcmToken, notiPayload, {
+      senderProfileId: payload.senderProfileId,
+      conversationId: payload.conversationId,
+    });
+  };
 }
