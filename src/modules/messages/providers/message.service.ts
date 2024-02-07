@@ -18,6 +18,7 @@ import { NotificationCompilers } from '../../notification/providers/noti-compile
 import { ENotificationEvent } from 'src/modules/notification/types';
 import { ISendNewConversationNotification } from '../types';
 import { errorLog } from 'src/shared/logger/logger.helpers';
+import { v4 as uuidV4 } from 'uuid';
 
 @Injectable()
 export class MessageService {
@@ -105,7 +106,7 @@ export class MessageService {
               snippet: input.payload.text || input.payload.mediaUrl,
               sentAt: new Date(),
               sentByProfileId: profileId,
-              id: '', // temporary set it to be empty string, it will be updated to appropriate message id right after this step
+              id: uuidV4(), // temporary set it to be UUID, it will be updated to appropriate message id right after this step
             },
             participants: [
               {
@@ -157,7 +158,7 @@ export class MessageService {
               snippet: input.payload.text || input.payload.mediaUrl,
               sentAt: new Date(),
               sentByProfileId: profileId,
-              id: '', // temporary set it to be empty string, it will be updated to appropriate message id right after this step
+              id: uuidV4(), // temporary set it to be UUID, it will be updated to appropriate message id right after this step
             },
           },
           { session },
