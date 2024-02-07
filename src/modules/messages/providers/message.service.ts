@@ -90,7 +90,7 @@ export class MessageService {
 
   async sendMessage(profileId: string, input: SendMessageInputDto) {
     return this.messageRepo.withTransaction(async (session) => {
-      let conversation: ConversationDocument | undefined = undefined;
+      let conversation: ConversationDocument | null = null;
       let isNewConversation = false;
       // Send to old conversation
       if (input.conversationId) {
@@ -98,7 +98,7 @@ export class MessageService {
           input.conversationId,
           { session },
         );
-        await this.conversationRepo.updateById(
+        conversation = await this.conversationRepo.updateById(
           conversation.id,
           {
             msgCount: conversation.msgCount + 1,
@@ -183,13 +183,16 @@ export class MessageService {
         },
         { session },
       );
-      await this.conversationRepo.updateById(conversation.id, {
-        lastMsg: {
-          ...conversation.lastMsg,
-          id: message.id,
+      await this.conversationRepo.updateById(
+        conversation.id,
+        {
+          lastMsg: {
+            ...convertObject(conversation.lastMsg),
+            id: message.id,
+          },
         },
-      });
-
+        { session },
+      );
       const dataToSendToRtdb = {
         ..._.omit(convertObject(message), ['createdAt', 'updatedAt', '_id']),
         chatServiceId: message.id,
