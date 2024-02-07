@@ -105,6 +105,7 @@ export class MessageService {
               snippet: input.payload.text || input.payload.mediaUrl,
               sentAt: new Date(),
               sentByProfileId: profileId,
+              id: '', // temporary set it to be empty string, it will be updated to appropriate message id right after this step
             },
             participants: [
               {
@@ -156,6 +157,7 @@ export class MessageService {
               snippet: input.payload.text || input.payload.mediaUrl,
               sentAt: new Date(),
               sentByProfileId: profileId,
+              id: '', // temporary set it to be empty string, it will be updated to appropriate message id right after this step
             },
           },
           { session },
@@ -180,6 +182,12 @@ export class MessageService {
         },
         { session },
       );
+      await this.conversationRepo.updateById(conversation.id, {
+        lastMsg: {
+          ...conversation.lastMsg,
+          id: message.id,
+        },
+      });
 
       const dataToSendToRtdb = {
         ..._.omit(convertObject(message), ['createdAt', 'updatedAt', '_id']),

@@ -11,6 +11,9 @@ export class LastMsgDocument extends EmbeddedDocument {
   snippet: string;
 
   @Prop({ required: true })
+  id: string;
+
+  @Prop({ required: true })
   sentAt: Date;
 
   @Prop({ required: true })

@@ -6,6 +6,9 @@ export class ConversationLastMsgResDto {
   @ApiProperty({ type: String })
   snippet: string;
 
+  @ApiProperty({ type: String })
+  id: string;
+
   @ApiProperty({ type: Date })
   sentAt: Date;
 
