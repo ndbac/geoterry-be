@@ -29,6 +29,21 @@ export class LocationDocument extends EmbeddedDocument {
   coordinates: number[];
 }
 
+@Schema({ _id: false })
+export class AddressDocument extends EmbeddedDocument {
+  @Prop({ type: String })
+  administrativeArea?: string;
+
+  @Prop({ type: String })
+  country?: string;
+
+  @Prop({ type: String })
+  subAdministrativeArea?: string;
+
+  @Prop({ type: String })
+  name?: string;
+}
+
 @Schema(DefaultSchemaOptions)
 export class TerryDocument extends BaseDocument {
   @Prop({ required: true })
@@ -43,8 +58,10 @@ export class TerryDocument extends BaseDocument {
   @Prop({ type: String })
   hint?: string;
 
-  @Prop({ type: String })
-  address?: string;
+  @Prop({
+    type: AddressDocument.schema,
+  })
+  address: AddressDocument;
 
   @Prop({ type: [String] })
   photoUrls?: string[];

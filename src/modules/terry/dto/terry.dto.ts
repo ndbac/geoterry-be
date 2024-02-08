@@ -47,6 +47,28 @@ export class TerryMetadataDto {
   terrain: number;
 }
 
+export class AddressInputDto {
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  country?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  administrativeArea?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  subAdministrativeArea?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  name?: string;
+}
+
 export class TerryInputDto {
   @ApiProperty({ type: String })
   @IsString()
@@ -63,10 +85,11 @@ export class TerryInputDto {
   @IsOptional()
   hint?: string;
 
-  @ApiPropertyOptional({ type: String })
-  @IsString()
+  @ApiPropertyOptional({ type: AddressInputDto })
   @IsOptional()
-  address?: string;
+  @Type(() => AddressInputDto)
+  @ValidateNested()
+  address?: AddressInputDto;
 
   @ApiProperty({ type: Boolean })
   @IsBoolean()

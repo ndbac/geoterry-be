@@ -15,6 +15,20 @@ export class TerryLocationResDto {
   longitude: number;
 }
 
+export class AddressResDto {
+  @ApiPropertyOptional({ type: String })
+  administrativeArea?: string;
+
+  @ApiPropertyOptional({ type: String })
+  country?: string;
+
+  @ApiPropertyOptional({ type: String })
+  subAdministrativeArea?: string;
+
+  @ApiPropertyOptional({ type: String })
+  name?: string;
+}
+
 export class TerryMetadataResDto {
   @ApiProperty({ type: Number })
   size: number;
@@ -55,8 +69,8 @@ export class TerryResponseDto extends BaseDbResponseDto {
   @ApiPropertyOptional({ type: String })
   description?: string;
 
-  @ApiPropertyOptional({ type: String })
-  address?: string;
+  @ApiPropertyOptional({ type: AddressResDto })
+  address?: AddressResDto;
 
   @ApiPropertyOptional({ type: String })
   hint?: string;
