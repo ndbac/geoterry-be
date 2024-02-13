@@ -24,7 +24,7 @@ aws:
   s3:
     signatureVersion: v4
     bucket: sample-aws-bucket
-    photoPrefixKey: geoterry/photo
+    photoPrefixKey: geoterry/photo/original
 
 firebase:
   config: sample-firebase-config-in-json
