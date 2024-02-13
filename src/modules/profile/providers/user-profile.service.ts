@@ -1,5 +1,5 @@
 import { convertObject } from 'src/shared/mongoose/helpers';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   UpdateProfileLocationReqDto,
   UpdateProfileReqDto,
@@ -200,11 +200,6 @@ export class UserProfileService {
     const profile = await this.profileRepo.findOneOrFail({
       userId,
     });
-    if (otherId === profile.id) {
-      throw new BadRequestException({
-        message: 'Profile ID must be different with your profile ID',
-      });
-    }
     const otherProfile = await this.profileRepo.findByIdOrFail(otherId);
     const conversation = await this.conversationRepo.findOne({
       participants: {
@@ -223,7 +218,10 @@ export class UserProfileService {
       },
     });
 
-    return { ...convertObject(otherProfile), conversationId: conversation?.id };
+    return {
+      ...convertObject(otherProfile),
+      conversationId: otherId === profile.id ? undefined : conversation?.id,
+    };
   }
 
   private async asyncLocationToRtdb(
